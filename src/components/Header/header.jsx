@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const handleClick = () => {
@@ -42,8 +43,8 @@ function Header() {
                 <input type="checkbox" className="checkbox" name="checkbox" />
               </div>
 
-              <button type="button" className="_hover03">
-                <a href="#popExit">Выйти</a>
+              <button type="button" href="#popExit" className="_hover03">
+                Выйти
               </button>
             </div>
           </nav>
