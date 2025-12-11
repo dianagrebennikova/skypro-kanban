@@ -1,4 +1,10 @@
+import { useState } from "react";
+
 function Header() {
+  const [isOpen, setIsOpen] = useState(false);
+  const handleClick = () => {
+    setIsOpen(!isOpen);
+  };
   return (
     <header className="header">
       <div className="container">
@@ -20,13 +26,14 @@ function Header() {
               <a href="#popNewCard">Создать новую задачу</a>
             </button>
 
-            <a href="#user-set-target" className="header__user _hover02">
+            <a href="#user-set-target" className="header__user _hover02" onClick={handleClick}>
               Ivan Ivanov
             </a>
 
             <div
-              className="header__pop-user-set pop-user-set"
-              id="user-set-target"
+
+              className="header__pop-user-set"
+              style={{ display: isOpen ? "block" : "none" }}
             >
               <p className="pop-user-set__name">Ivan Ivanov</p>
               <p className="pop-user-set__mail">ivan.ivanov@gmail.com</p>
@@ -36,8 +43,8 @@ function Header() {
                 <input type="checkbox" className="checkbox" name="checkbox" />
               </div>
 
-              <button type="button" className="_hover03">
-                <a href="#popExit">Выйти</a>
+              <button type="button" href="#popExit" className="_hover03">
+                Выйти
               </button>
             </div>
           </nav>

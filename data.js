@@ -1,0 +1,88 @@
+export const cardsData = [
+    {
+      id: 1,
+      topic: "Web Design",
+      title: "Название задачи",
+      date: "2023-10-30",
+      status: "Без статуса",
+      theme: "_orange",
+    },    {
+      id: 2,
+      topic: "Research",
+      title: "Название задачи",
+      date: "2023-10-30",
+      status: "Без статуса",
+      theme: "_green",
+    },    
+    {
+      id: 3,
+      topic: "Web Design",
+      title: "Название задачи",
+      date: "2023-10-30",
+      status: "Без статуса",
+      theme: "_orange",
+    },    {
+      id: 4,
+      topic: "Copywriting",
+      title: "Название задачи",
+      date: "2023-10-30",
+      status: "Без статуса",
+      theme: "_purple"
+    },
+    {
+      id: 5,
+      topic: "Research",
+      title: "Название задачи",
+      date: "2023-10-30",
+      status: "Без статуса",
+      theme: "_green",
+    },   
+    {
+      id: 6,
+      topic: "Research",
+      title: "Название задачи",
+      date: "2023-10-30",
+      status: "Нужно сделать",
+      theme: "_green",
+    },
+    {
+      id: 7,
+      topic: "Web Design",
+      title: "Название задачи",
+      date: "2023-10-30",
+      status: "В работе",
+      theme: "_orange",
+    },    {
+      id: 8,
+      topic: "Copywriting",
+      title: "Название задачи",
+      date: "2023-10-30",
+      status: "В работе",
+      theme: "_purple"
+    },
+    {
+      id: 9,
+      topic: "Research",
+      title: "Название задачи",
+      date: "2023-10-30",
+      status: "В работе",
+      theme: "_green",
+    }, 
+    {
+      id: 10,
+      topic: "Research",
+      title: "Название задачи",
+      date: "2023-10-30",
+      status: "Тестирование",
+      theme: "_green",
+    },
+    {
+      id: 11,
+      topic: "Research",
+      title: "Название задачи",
+      date: "2023-10-30",
+      status: "Готово",
+      theme: "_green",
+    },
+  ];
+  
