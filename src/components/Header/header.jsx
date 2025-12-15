@@ -1,37 +1,36 @@
 import { useState } from "react";
+import {
+  HeaderWrapper,
+  HeaderBlock,
+  Logo,
+  Nav,
+  CreateButton,
+  UserName,
+} from "./header.styled.js"
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  const handleClick = () => {
-    setIsOpen(!isOpen);
-  };
+
   return (
-    <header className="header">
+    <HeaderWrapper>
       <div className="container">
-        <div className="header__block">
-          <div className="header__logo _show _light">
-            <a href="" target="_self">
+        <HeaderBlock>
+          <Logo>
+            <a href="/" target="_self">
               <img src="/images/logo.png" alt="logo" />
             </a>
-          </div>
+          </Logo>
 
-          <div className="header__logo _dark">
-            <a href="" target="_self">
-              <img src="/images/logo-dark.png" alt="logo" />
-            </a>
-          </div>
-
-          <nav className="header__nav">
-            <button className="header__btn-main-new _hover01" id="btnMainNew">
+          <Nav>
+            <CreateButton>
               <a href="#popNewCard">Создать новую задачу</a>
-            </button>
+            </CreateButton>
 
-            <a href="#user-set-target" className="header__user _hover02" onClick={handleClick}>
+            <UserName onClick={() => setIsOpen(!isOpen)}>
               Ivan Ivanov
-            </a>
+            </UserName>
 
             <div
-
               className="header__pop-user-set"
               style={{ display: isOpen ? "block" : "none" }}
             >
@@ -40,17 +39,17 @@ function Header() {
 
               <div className="pop-user-set__theme">
                 <p>Темная тема</p>
-                <input type="checkbox" className="checkbox" name="checkbox" />
+                <input type="checkbox" />
               </div>
 
-              <button type="button" href="#popExit" className="_hover03">
+              <button type="button" className="_hover03">
                 Выйти
               </button>
             </div>
-          </nav>
-        </div>
+          </Nav>
+        </HeaderBlock>
       </div>
-    </header>
+    </HeaderWrapper>
   );
 }
 

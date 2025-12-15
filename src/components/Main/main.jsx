@@ -1,4 +1,5 @@
 import Column from "../Column/Column";
+import { MainWrapper, Container, MainBlock, MainContent, MainColumn } from "./main.styled";
 
 const Main = ({ cards }) => {
   const cardsWithoutStatus = cards.filter((c) => c.status === "Без статуса");
@@ -8,19 +9,29 @@ const Main = ({ cards }) => {
   const cardsDone = cards.filter((c) => c.status === "Готово");
 
   return (
-    <main className="main">
-      <div className="container">
-        <div className="main__block">
-          <div className="main__content">
-            <Column title="Без статуса" cards={cardsWithoutStatus} />
-            <Column title="Нужно сделать" cards={cardsToDo} />
-            <Column title="В работе" cards={cardsInProgress} />
-            <Column title="Тестирование" cards={cardsTesting} />
-            <Column title="Готово" cards={cardsDone} />
-          </div>
-        </div>
-      </div>
-    </main>
+    <MainWrapper>
+      <Container>
+        <MainBlock>
+          <MainContent>
+            <MainColumn>
+              <Column title="Без статуса" cards={cardsWithoutStatus} />
+            </MainColumn>
+            <MainColumn>
+              <Column title="Нужно сделать" cards={cardsToDo} />
+            </MainColumn>
+            <MainColumn>
+              <Column title="В работе" cards={cardsInProgress} />
+            </MainColumn>
+            <MainColumn>
+              <Column title="Тестирование" cards={cardsTesting} />
+            </MainColumn>
+            <MainColumn>
+              <Column title="Готово" cards={cardsDone} />
+            </MainColumn>
+          </MainContent>
+        </MainBlock>
+      </Container>
+    </MainWrapper>
   );
 };
 

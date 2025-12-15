@@ -1,42 +1,58 @@
 import Calendar from "../Calendar/Calendar";
+import {
+  CardItem,
+  CardWrapper,
+  CardGroup,
+  CardTheme,
+  CardBtn,
+  CardContent,
+  CardTitle,
+  CardDate,
+} from "./card.styled.js";
+
+const themeColors = {
+  _orange: { bg: "#FFE4C2", text: "#FF6D00" },
+  _green: { bg: "#B4FDD1", text: "#06B16E" },
+  _purple: { bg: "#E9D4FF", text: "#9A48F1" },
+  _gray: { bg: "#94A6BE", text: "#FFFFFF" },
+};
 
 const Card = ({ theme, title, date }) => {
   return (
-    <div className="cards__item">
-      {" "}
-      <div className="cards__card card">
-        {" "}
-        <div className="card__group">
-          <div className={`card__theme ${theme}`}>
-            <p className={theme.replace("_", "")}>
+    <CardItem>
+      <CardWrapper>
+        <CardGroup>
+          <CardTheme
+            $bgColor={themeColors[theme].bg}
+            $textColor={themeColors[theme].text}
+          >
+            <p>
               {theme === "_orange"
                 ? "Web Design"
                 : theme === "_green"
                 ? "Research"
-                : "Copywriting"}{" "}
-            </p>{" "}
-          </div>{" "}
+                : "Copywriting"}
+            </p>
+          </CardTheme>
           <a href="#popBrowse" target="_self">
-            {" "}
-            <div className="card__btn">
-              {" "}
-              <div></div> <div></div> <div></div>{" "}
-            </div>{" "}
-          </a>{" "}
-        </div>{" "}
-        <div className="card__content">
-          {" "}
+            <CardBtn>
+              <div></div>
+              <div></div>
+              <div></div>
+            </CardBtn>
+          </a>
+        </CardGroup>
+
+        <CardContent>
           <a href="" target="_blank">
-            {" "}
-            <h3 className="card__title">{title}</h3>{" "}
-          </a>{" "}
-          <div className="card__date">
-            {" "}
-            <Calendar date={date} />{" "}
-          </div>{" "}
-        </div>{" "}
-      </div>{" "}
-    </div>
+            <CardTitle>{title}</CardTitle>
+          </a>
+          <CardDate>
+            <Calendar date={date} />
+          </CardDate>
+        </CardContent>
+      </CardWrapper>
+    </CardItem>
   );
 };
 
