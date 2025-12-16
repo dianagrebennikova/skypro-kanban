@@ -1,6 +1,12 @@
+import React from "react";
+import {
+  CalendarWrapper,
+  CalendarText
+} from "./calendar.styled";
+
 export default function Calendar({ date }) {
   return (
-    <>
+    <CalendarWrapper>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="13"
@@ -29,7 +35,7 @@ export default function Calendar({ date }) {
           </clipPath>
         </defs>
       </svg>
-      <p>{date}</p>
-    </>
+      <CalendarText>{date}</CalendarText>
+    </CalendarWrapper>
   );
 }
