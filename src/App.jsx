@@ -1,44 +1,17 @@
-import "./App.css";
 import { useState, useEffect } from "react";
-
-import PopUser from "./components/popups/popUser.jsx";
-import PopNewCard from "./components/popups/popNewCard.jsx";
-import PopBrowse from "./components/popups/popBrowse.jsx";
-import Header from "./components/Header/header.jsx";
-import Main from "./components/Main/main.jsx";
-
-import { cardsData } from "../data.js";
+import AppRoutes from "./AppRoutes";
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [cards, setCards] = useState([]);
+  const [isAuth, setIsAuth] = useState(() => {
+    return localStorage.getItem("isAuth") === "true";
+  });
 
   useEffect(() => {
-    setTimeout(() => {
-      setCards(cardsData);
-      setIsLoading(false);
-    }, 1500);
-  }, []);
+    localStorage.setItem("isAuth", isAuth);
+  }, [isAuth]);
 
-  return (
-    <div className="wrapper">
-      {/* pop-up start */}
-      <PopUser />
-      <PopNewCard />
-      <PopBrowse />
-      {/* pop-up end */}
-
-      <Header />
-
-      {isLoading ? (
-        <h2 style={{ textAlign: "center", marginTop: "40px" }}>
-          Данные загружаются...
-        </h2>
-      ) : (
-        <Main cards={cards} />
-      )}
-    </div>
-  );
+  return <AppRoutes isAuth={isAuth} setIsAuth={setIsAuth} />;
 }
 
 export default App;
+

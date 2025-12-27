@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   HeaderWrapper,
   HeaderBlock,
@@ -6,46 +7,54 @@ import {
   Nav,
   CreateButton,
   UserName,
-} from "./header.styled.js"
+} from "./header.styled.js";
 
-function Header() {
+function Header({ openExit }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleToggle = () => setIsOpen((prev) => !prev);
 
   return (
     <HeaderWrapper>
       <div className="container">
         <HeaderBlock>
           <Logo>
-            <a href="/" target="_self">
+            <Link to="/">
               <img src="/images/logo.png" alt="logo" />
-            </a>
+            </Link>
           </Logo>
 
           <Nav>
             <CreateButton>
-              <a href="#popNewCard">Создать новую задачу</a>
+              <Link to="/add-task">Создать новую задачу</Link>
             </CreateButton>
 
-            <UserName onClick={() => setIsOpen(!isOpen)}>
+            <UserName type="button" onClick={handleToggle}>
               Ivan Ivanov
             </UserName>
 
-            <div
-              className="header__pop-user-set"
-              style={{ display: isOpen ? "block" : "none" }}
-            >
-              <p className="pop-user-set__name">Ivan Ivanov</p>
-              <p className="pop-user-set__mail">ivan.ivanov@gmail.com</p>
+            {isOpen && (
+              <div className="header__pop-user-set">
+                <p className="pop-user-set__name">Ivan Ivanov</p>
+                <p className="pop-user-set__mail">ivan.ivanov@gmail.com</p>
 
-              <div className="pop-user-set__theme">
-                <p>Темная тема</p>
-                <input type="checkbox" />
+                <div className="pop-user-set__theme">
+                  <p>Темная тема</p>
+                  <input type="checkbox" />
+                </div>
+
+                <button
+                  type="button"
+                  className="_hover03"
+                  onClick={() => {
+                    setIsOpen(false);
+                    openExit();
+                  }}
+                >
+                  Выйти
+                </button>
               </div>
-
-              <button type="button" className="_hover03">
-                Выйти
-              </button>
-            </div>
+            )}
           </Nav>
         </HeaderBlock>
       </div>

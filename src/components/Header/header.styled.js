@@ -24,7 +24,10 @@ export const Nav = styled.nav`
   max-width: 290px;
   display: flex;
   align-items: center;
+  position: relative;
 `;
+
+
 
 export const CreateButton = styled.button`
   width: 178px;
@@ -35,7 +38,7 @@ export const CreateButton = styled.button`
   border: none;
   font-size: 14px;
   font-weight: 500;
-  margin-right: 20px;
+  margin-right: 14px;
   cursor: pointer;
 
   &:hover {
@@ -44,10 +47,16 @@ export const CreateButton = styled.button`
 
   a {
     color: #ffffff;
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+  cursor: pointer;
+  text-decoration: none;
   }
 `;
 
-export const UserName = styled.a`
+export const UserName = styled.button`
+  background: none;
+  border: none;
+  padding: 0;
   display: flex;
   align-items: center;
   font-size: 14px;
@@ -69,3 +78,4 @@ export const UserName = styled.a`
     transform: rotate(-45deg);
   }
 `;
+ 

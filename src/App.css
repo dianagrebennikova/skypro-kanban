@@ -11,9 +11,12 @@
 
 a,
 a:visited {
-  text-decoration: none;
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
   cursor: pointer;
-}
+  text-decoration: none;
+  color: rgba(148, 166, 190, 0.4);
+  }
+
 
 button,
 ._btn {
@@ -603,9 +606,7 @@ body {
   display: none;
 }
 
-
 .header__pop-user-set {
-  display: none;
   position: absolute;
   top: 61px;
   right: 0;
@@ -617,7 +618,8 @@ body {
   box-shadow: 0px 10px 39px 0px rgba(26, 56, 101, 0.21);
   padding: 34px;
   text-align: center;
-  z-index: 2;
+  z-index: 9999;
+  pointer-events: auto;
 }
 
 @media screen and (max-width: 660px) {
