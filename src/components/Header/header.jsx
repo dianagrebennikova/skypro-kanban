@@ -9,7 +9,7 @@ import {
   UserName,
 } from "./header.styled.js";
 
-function Header({ openExit }) {
+function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleToggle = () => setIsOpen((prev) => !prev);
@@ -43,16 +43,15 @@ function Header({ openExit }) {
                   <input type="checkbox" />
                 </div>
 
-                <button
-                  type="button"
-                  className="_hover03"
-                  onClick={() => {
-                    setIsOpen(false);
-                    openExit();
-                  }}
-                >
-                  Выйти
-                </button>
+                <Link to="/exit">
+                  <button
+                    type="button"
+                    className="_hover03"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Выйти
+                  </button>
+                </Link>
               </div>
             )}
           </Nav>

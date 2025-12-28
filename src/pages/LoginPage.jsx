@@ -76,8 +76,7 @@ const LoginPage = ({ setIsAuth }) => {
         {error && <ErrorText>{error}</ErrorText>}
 
         <RegisterLink>
-          Нужно зарегистрироваться?{" "}
-          <Link to="/register">Регистрируйтесь здесь</Link>
+          Нужно зарегистрироваться? <Link to="/register">Регистрируйтесь здесь</Link>
         </RegisterLink>
       </LoginWrapper>
     </LoginForm>

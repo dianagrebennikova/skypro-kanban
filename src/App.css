@@ -102,12 +102,12 @@ body {
 }
 
 .pop-exit {
-  display: none;
+  display: block;
   width: 100%;
   height: 100%;
   min-width: 320px;
   min-height: 100vh;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 5;
@@ -181,7 +181,7 @@ body {
   line-height: 21px;
   font-weight: 500;
   letter-spacing: -0.14px;
-  color: #FFFFFF;
+  color: rgba(86, 94, 239, 1);
 }
 .pop-exit__exit-no a {
   width: 100%;
@@ -433,12 +433,12 @@ body {
 }
 
 .pop-browse {
-  display: none;
+  display: block;
   width: 100%;
   height: 100%;
   min-width: 375px;
   min-height: 100vh;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 7;
@@ -513,6 +513,10 @@ body {
   margin-bottom: 10px;
   padding: 0 14px;
 }
+.btn-group{
+  display: flex
+  ;
+}
 .pop-browse__btn-browse .btn-group button, .pop-browse__btn-edit .btn-group button {
   margin-right: 8px;
 }
@@ -582,9 +586,14 @@ body {
   outline: none;
   background: transparent;
   color: #565EEF;
+  width: 176px;
+    margin-left: 0px;
 }
 ._btn-bor a {
   color: #565EEF;
+}
+.btn-browse__delete{
+  width: 131px;
 }
 
 ._btn-bg {

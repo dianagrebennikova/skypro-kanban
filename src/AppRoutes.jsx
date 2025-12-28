@@ -1,76 +1,39 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import PropTypes from "prop-types";
+
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import MainPage from "./pages/MainPage";
-import AddTaskPage from "./pages/AddTaskPage";
-import ExitPage from "./pages/ExitPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import PropTypes from "prop-types";
+
+import ProtectedRoute from "./pages/ProtectedRoute";
+
+import PopUser from "./components/popups/popUser";
+import PopBrowse from "./components/popups/popBrowse";
+import PopNewCard from "./components/popups/popNewCard";
 
 function AppRoutes({ isAuth, setIsAuth }) {
   return (
     <Routes>
-      {/* Доска с карточками */}
-      <Route
-        path="/"
-        element={
-          isAuth ? (
-            <MainPage setIsAuth={setIsAuth} />
-          ) : (
-            <Navigate to="/login" />
-          )
-        }
-      />
-
-      {/* Просмотр / редактирование карточки */}
-      <Route
-        path="/card/:id"
-        element={
-          isAuth ? (
-            <MainPage setIsAuth={setIsAuth} />
-          ) : (
-            <Navigate to="/login" />
-          )
-        }
-      />
-
-      {/* Добавление задачи */}
-      <Route
-  path="/add-task"
-  element={
-    isAuth ? <AddTaskPage /> : <Navigate to="/login" />
-  }
-/>
-
-
-      {/* Выход */}
-      <Route
-        path="/exit"
-        element={
-          isAuth ? (
-            <ExitPage setIsAuth={setIsAuth} />
-          ) : (
-            <Navigate to="/login" />
-          )
-        }
-      />
-
-      {/* Публичные страницы */}
       <Route path="/login" element={<LoginPage setIsAuth={setIsAuth} />} />
-      <Route
-        path="/register"
-        element={<RegisterPage setIsAuth={setIsAuth} />}
-      />
+      <Route path="/register" element={<RegisterPage setIsAuth={setIsAuth} />} />
 
-      {/* 404 */}
+      <Route element={<ProtectedRoute isAuth={isAuth} />}>
+        <Route path="/" element={<MainPage setIsAuth={setIsAuth} />}>
+          <Route path="exit" element={<PopUser setIsAuth={setIsAuth} />} />
+          <Route path="card/:id" element={<PopBrowse />} />
+          <Route path="add-task" element={<PopNewCard />} />
+        </Route>
+      </Route>
+
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
 
-export default AppRoutes;
-
 AppRoutes.propTypes = {
   isAuth: PropTypes.bool.isRequired,
   setIsAuth: PropTypes.func.isRequired,
 };
+
+export default AppRoutes;
