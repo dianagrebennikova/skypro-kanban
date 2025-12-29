@@ -263,7 +263,7 @@ body {
 }
 
 .pop-new-card {
-  display: none;
+  display: block;
   width: 100%;
   min-width: 375px;
   height: 100%;
@@ -413,6 +413,7 @@ body {
   align-items: flex-start;
   justify-content: flex-start;
 }
+
 .categories__p {
   margin-bottom: 14px;
 }
@@ -430,8 +431,20 @@ body {
   font-weight: 600;
   line-height: 14px;
   white-space: nowrap;
+ 
 }
-
+._orange{
+  background-color:rgba(255, 228, 194, 1);
+  color: rgba(255, 109, 0, 1);
+  }
+  ._green{
+  background-color:#B4FDD1;
+  color: #06B16E
+  }
+  ._purple{
+    background-color:#E9D4FF;
+  color: #9A48F1;
+  }
 .pop-browse {
   display: block;
   width: 100%;

@@ -47,7 +47,7 @@ const Card = ({ id, theme, title, date }) => {
           <CardContent>
             <CardTitle>{title}</CardTitle>
             <CardDate>
-              <Calendar date={date} />
+            <Calendar date={date} variant="compact" />
             </CardDate>
           </CardContent>
         </CardWrapper>

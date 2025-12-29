@@ -22,14 +22,26 @@ function PopBrowse() {
               </div>
             </div>
 
-            <div className="pop-browse__status status">
-              <p className="status__p subttl">Статус</p>
-              <div className="status__themes">
-                <div className="status__theme _gray">
-                  <p className="_gray">Нужно сделать</p>
-                </div>
-              </div>
-            </div>
+            <div class="pop-browse__status status">
+								<p class="status__p subttl">Статус</p>
+								<div class="status__themes">
+									<div class="status__theme _hide">
+										<p>Без статуса</p>
+									</div>
+									<div class="status__theme _gray">
+										<p class="_gray">Нужно сделать</p>
+									</div>
+									<div class="status__theme _hide">
+										<p>В работе</p>
+									</div>
+									<div class="status__theme _hide">
+										<p>Тестирование</p>
+									</div>
+									<div class="status__theme _hide">
+										<p>Готово</p>
+									</div>
+								</div>
+							</div>
 
             <div className="pop-browse__wrap">
               <form className="pop-browse__form form-browse" id="formBrowseCard">
