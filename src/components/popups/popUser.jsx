@@ -1,18 +1,15 @@
-import { useNavigate } from "react-router-dom";
-
-function PopUser({ setIsAuth }) {
-  const navigate = useNavigate();
-
+function PopUser({ setIsAuth, onClose }) {
   const handleExit = (e) => {
     e.preventDefault();
+    localStorage.removeItem("token");
     setIsAuth(false);
-    localStorage.removeItem("isAuth");
-    navigate("/login");
+    onClose?.(); 
+    window.location.href = "/login"; 
   };
 
   const handleClose = (e) => {
     e.preventDefault();
-    navigate(-1);
+    onClose?.();
   };
 
   return (
@@ -23,23 +20,23 @@ function PopUser({ setIsAuth }) {
             <h2>Выйти из аккаунта?</h2>
           </div>
 
-          <form className="pop-exit__form" id="formExit">
-            <div className="pop-exit__form-group">
-              <button
-                className="pop-exit__exit-yes _hover01"
-                onClick={handleExit}
-              >
-                Да, выйти
-              </button>
+          <div className="pop-exit__form-group">
+            <button
+              type="button"
+              className="pop-exit__exit-yes _hover01"
+              onClick={handleExit}
+            >
+              Да, выйти
+            </button>
 
-              <button
-                className="pop-exit__exit-no _hover03"
-                onClick={handleClose}
-              >
-                Нет, остаться
-              </button>
-            </div>
-          </form>
+            <button
+              type="button"
+              className="pop-exit__exit-no _hover03"
+              onClick={handleClose}
+            >
+              Нет, остаться
+            </button>
+          </div>
         </div>
       </div>
     </div>

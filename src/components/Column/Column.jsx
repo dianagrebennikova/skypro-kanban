@@ -9,9 +9,10 @@ export default function Column({ title, cards }) {
       </ColumnTitle>
 
       <CardsWrapper>
-        {cards.map((card) => (
+        {cards.map((card, index) => (
+
           <Card
-            key={card.id}
+            key={card.id || index}
             id={card.id}
             theme={card.theme}
             title={card.title}

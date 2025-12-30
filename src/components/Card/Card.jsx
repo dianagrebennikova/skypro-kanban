@@ -11,7 +11,6 @@ import {
 } from "./card.styled.js";
 import { Link } from "react-router-dom";
 
-
 const themeColors = {
   _orange: { bg: "#FFE4C2", text: "#FF6D00" },
   _green: { bg: "#B4FDD1", text: "#06B16E" },
@@ -20,22 +19,26 @@ const themeColors = {
 };
 
 const Card = ({ id, theme, title, date }) => {
+ 
+  const colors = themeColors[theme] || { bg: "#fff", text: "#000" };
+
+
+  const themeLabel =
+    theme === "_orange"
+      ? "Web Design"
+      : theme === "_green"
+      ? "Research"
+      : theme === "_purple"
+      ? "Copywriting"
+      : "Other";
+
   return (
     <Link to={`/card/${id}`}>
       <CardItem>
         <CardWrapper>
           <CardGroup>
-            <CardTheme
-              $bgColor={themeColors[theme].bg}
-              $textColor={themeColors[theme].text}
-            >
-              <p>
-                {theme === "_orange"
-                  ? "Web Design"
-                  : theme === "_green"
-                  ? "Research"
-                  : "Copywriting"}
-              </p>
+            <CardTheme $bgColor={colors.bg} $textColor={colors.text}>
+              <p>{themeLabel}</p>
             </CardTheme>
             <CardBtn>
               <div></div>
@@ -45,9 +48,9 @@ const Card = ({ id, theme, title, date }) => {
           </CardGroup>
 
           <CardContent>
-            <CardTitle>{title}</CardTitle>
+            <CardTitle>{title || "Без названия"}</CardTitle>
             <CardDate>
-            <Calendar date={date} variant="compact" />
+              <Calendar date={date} variant="compact" />
             </CardDate>
           </CardContent>
         </CardWrapper>
@@ -55,6 +58,5 @@ const Card = ({ id, theme, title, date }) => {
     </Link>
   );
 };
-
 
 export default Card;

@@ -51,7 +51,7 @@ padding-left: 10px;
   box-sizing: border-box;
 border: 0.7px solid rgba(148, 166, 190, 0.4);
 border-radius: 8px;
-  color: #ffffff;
+  color:rgba(0, 0, 0, 1);;
 
   &::placeholder {
     color: rgba(148, 166, 190, 1);
