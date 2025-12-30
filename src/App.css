@@ -11,9 +11,12 @@
 
 a,
 a:visited {
-  text-decoration: none;
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
   cursor: pointer;
-}
+  text-decoration: none;
+  color: rgba(148, 166, 190, 0.4);
+  }
+
 
 button,
 ._btn {
@@ -99,12 +102,12 @@ body {
 }
 
 .pop-exit {
-  display: none;
+  display: block;
   width: 100%;
   height: 100%;
   min-width: 320px;
   min-height: 100vh;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 5;
@@ -178,7 +181,7 @@ body {
   line-height: 21px;
   font-weight: 500;
   letter-spacing: -0.14px;
-  color: #FFFFFF;
+  color: rgba(86, 94, 239, 1);
 }
 .pop-exit__exit-no a {
   width: 100%;
@@ -260,7 +263,7 @@ body {
 }
 
 .pop-new-card {
-  display: none;
+  display: block;
   width: 100%;
   min-width: 375px;
   height: 100%;
@@ -410,6 +413,7 @@ body {
   align-items: flex-start;
   justify-content: flex-start;
 }
+
 .categories__p {
   margin-bottom: 14px;
 }
@@ -427,15 +431,27 @@ body {
   font-weight: 600;
   line-height: 14px;
   white-space: nowrap;
+ 
 }
-
+._orange{
+  background-color:rgba(255, 228, 194, 1);
+  color: rgba(255, 109, 0, 1);
+  }
+  ._green{
+  background-color:#B4FDD1;
+  color: #06B16E
+  }
+  ._purple{
+    background-color:#E9D4FF;
+  color: #9A48F1;
+  }
 .pop-browse {
-  display: none;
+  display: block;
   width: 100%;
   height: 100%;
   min-width: 375px;
   min-height: 100vh;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 7;
@@ -510,6 +526,10 @@ body {
   margin-bottom: 10px;
   padding: 0 14px;
 }
+.btn-group{
+  display: flex
+  ;
+}
 .pop-browse__btn-browse .btn-group button, .pop-browse__btn-edit .btn-group button {
   margin-right: 8px;
 }
@@ -579,9 +599,14 @@ body {
   outline: none;
   background: transparent;
   color: #565EEF;
+  width: 176px;
+    margin-left: 0px;
 }
 ._btn-bor a {
   color: #565EEF;
+}
+.btn-browse__delete{
+  width: 131px;
 }
 
 ._btn-bg {
@@ -603,9 +628,7 @@ body {
   display: none;
 }
 
-
 .header__pop-user-set {
-  display: none;
   position: absolute;
   top: 61px;
   right: 0;
@@ -617,7 +640,8 @@ body {
   box-shadow: 0px 10px 39px 0px rgba(26, 56, 101, 0.21);
   padding: 34px;
   text-align: center;
-  z-index: 2;
+  z-index: 9999;
+  pointer-events: auto;
 }
 
 @media screen and (max-width: 660px) {

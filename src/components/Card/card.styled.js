@@ -37,6 +37,7 @@ export const CardTheme = styled.div`
     font-size: 10px;
     font-weight: 600;
     line-height: 10px;
+    text-decoration: none;
     color: ${({ $textColor }) => $textColor || "#000"};
   }
 `;
