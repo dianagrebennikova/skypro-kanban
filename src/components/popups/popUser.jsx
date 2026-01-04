@@ -1,4 +1,8 @@
+import { useNavigate } from "react-router-dom";
+
 function PopUser({ setIsAuth, onClose }) {
+  const navigate = useNavigate();
+
   const handleExit = (e) => {
     e.preventDefault();
     localStorage.removeItem("token");
@@ -8,7 +12,7 @@ function PopUser({ setIsAuth, onClose }) {
 
     onClose?.();
 
-    window.location.href = "/login";
+    navigate("/login", { replace: true });
   };
 
   const handleClose = (e) => {

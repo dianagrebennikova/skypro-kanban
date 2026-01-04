@@ -16,27 +16,20 @@ api.interceptors.request.use((config) => {
 });
 
 api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response) {
-      const data = error.response.data;
-      const url = error.response.config.url;
-
-      if (data?.message) return Promise.reject(data.message);
-
-      if (error.response.status === 400) {
-        if (url.endsWith("/user")) return Promise.reject("Пользователь с таким логином уже существует");
-        if (url.endsWith("/user/login")) return Promise.reject("Неверный логин или пароль");
-        return Promise.reject("Неверные данные");
+    (response) => response,
+    (error) => {
+      if (error.response) {
+        const data = error.response.data;
+        if (data?.message) return Promise.reject(data.message);
+        if (error.response.status === 400) return Promise.reject("Неверные данные");
+        if (error.response.status === 401) return Promise.reject("Необходима авторизация");
+  
+        return Promise.reject("Ошибка сервера");
       }
-
-      if (error.response.status === 401) return Promise.reject("Необходима авторизация");
-
-      return Promise.reject("Ошибка сервера");
+  
+      return Promise.reject("Ошибка сети");
     }
-
-    return Promise.reject("Ошибка сети");
-  }
-);
+  );
+  
 
 export default api;
