@@ -86,3 +86,8 @@ export const FormGroup = styled.div`
   text-decoration: underline;
   }
 `;
+export const ErrorText = styled.p`
+  color: red;
+  font-size: 12px;
+  text-align: center;
+`;

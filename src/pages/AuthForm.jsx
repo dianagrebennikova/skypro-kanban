@@ -12,6 +12,7 @@ import {
   Input,
   Button,
   FormGroup,
+  ErrorText,
 } from "./AuthForm.styled";
 
 const AuthForm = ({ isSignUp, setIsAuth }) => {
@@ -27,40 +28,30 @@ const AuthForm = ({ isSignUp, setIsAuth }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
+  
     if (!login || !password || (isSignUp && !name)) {
       setError("Заполните все поля");
       return;
     }
-
+  
     try {
       setLoading(true);
-
-      let user;
-
-      if (isSignUp) {
-        user = await registerUser({
-          login: login.trim(),
-          password: password.trim(),
-          name: name.trim(),
-        });
-      } else {
-        user = await loginUser({
-          login: login.trim(),
-          password: password.trim(),
-        });
-      }
-
+  
+      let user = isSignUp
+        ? await registerUser({ login: login.trim(), password: password.trim(), name: name.trim() })
+        : await loginUser({ login: login.trim(), password: password.trim() });
+  
       localStorage.setItem("token", user.token);
       localStorage.setItem("userLogin", user.login);
       setIsAuth(true);
       navigate("/");
     } catch (err) {
-      setError(typeof err === "string" ? err : "Ошибка сервера");
+      setError(err);
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <Bg>
@@ -104,7 +95,8 @@ const AuthForm = ({ isSignUp, setIsAuth }) => {
                 : "Войти"}
             </Button>
 
-            {error && <p>{error}</p>}
+                    {error && <ErrorText>{error}</ErrorText>}
+            
 
             {!isSignUp && (
               <FormGroup>

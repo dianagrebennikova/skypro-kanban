@@ -9,24 +9,33 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
-
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-
   return config;
 });
 
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    const message =
-      error.response?.data?.message ||
-      error.response?.status === 401
-        ? "Необходима авторизация"
-        : "Ошибка сервера";
+    if (error.response) {
+      const data = error.response.data;
+      const url = error.response.config.url;
 
-    return Promise.reject(message);
+      if (data?.message) return Promise.reject(data.message);
+
+      if (error.response.status === 400) {
+        if (url.endsWith("/user")) return Promise.reject("Пользователь с таким логином уже существует");
+        if (url.endsWith("/user/login")) return Promise.reject("Неверный логин или пароль");
+        return Promise.reject("Неверные данные");
+      }
+
+      if (error.response.status === 401) return Promise.reject("Необходима авторизация");
+
+      return Promise.reject("Ошибка сервера");
+    }
+
+    return Promise.reject("Ошибка сети");
   }
 );
 

@@ -2,9 +2,13 @@ function PopUser({ setIsAuth, onClose }) {
   const handleExit = (e) => {
     e.preventDefault();
     localStorage.removeItem("token");
+    localStorage.removeItem("userLogin");
+
     setIsAuth(false);
-    onClose?.(); 
-    window.location.href = "/login"; 
+
+    onClose?.();
+
+    window.location.href = "/login";
   };
 
   const handleClose = (e) => {
