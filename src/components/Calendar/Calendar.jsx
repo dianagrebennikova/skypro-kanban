@@ -26,6 +26,16 @@ export default function Calendar({ date, variant = "full" }) {
   );
 
   if (variant === "compact") {
+    let formattedDate = "Без даты";
+  
+    if (date) {
+      const d = new Date(date);
+      const day = String(d.getDate()).padStart(2, "0");
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const year = String(d.getFullYear()).slice(-2);
+      formattedDate = `${day}.${month}.${year}`;
+    }
+  
     return (
       <CalendarWrapper>
         <svg
@@ -47,12 +57,12 @@ export default function Calendar({ date, variant = "full" }) {
             strokeLinecap="round"
           />
         </svg>
-
-        <CalendarText>{date || "Без даты"}</CalendarText>
+  
+        <CalendarText>{formattedDate}</CalendarText>
       </CalendarWrapper>
     );
   }
-
+  
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 

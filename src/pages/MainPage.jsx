@@ -5,18 +5,28 @@ import { Outlet } from "react-router-dom";
 import Header from "../components/Header/header.jsx";
 import Main from "../components/Main/main.jsx";
 
-import { cardsData } from "../../data.js";
+import { getTasks } from "../services/kanban.js";
 import { Wrapper, LoadingText } from "./MainPage.styled";
 
 function MainPage({ setIsAuth }) {
   const [isLoading, setIsLoading] = useState(true);
   const [cards, setCards] = useState([]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    setTimeout(() => {
-      setCards(cardsData);
-      setIsLoading(false);
-    }, 1500);
+    const fetchTasks = async () => {
+      try {
+        setIsLoading(true);
+        const tasks = await getTasks();
+        setCards(tasks);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTasks();
   }, []);
 
   return (
@@ -24,8 +34,13 @@ function MainPage({ setIsAuth }) {
       <Header setIsAuth={setIsAuth} />
 
       <Wrapper>
-        {isLoading ? <LoadingText>Данные загружаются...</LoadingText> : <Main cards={cards} />}
+        {isLoading && <LoadingText>Данные загружаются...</LoadingText>}
+
+        {error && <LoadingText>{error}</LoadingText>}
+
+        {!isLoading && !error && <Main cards={cards} />}
       </Wrapper>
+
       <Outlet />
     </div>
   );

@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { loginUser } from "../services/user";
+
 import {
   LoginForm,
   LoginWrapper,
@@ -13,37 +15,47 @@ import {
 const LoginPage = ({ setIsAuth }) => {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
+  const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState("");
-  const [emailError, setEmailError] = useState(false);
+  const [loginError, setLoginError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const CORRECT_EMAIL = "test@test.com";
-  const CORRECT_PASSWORD = "123456";
-
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     setError("");
-    setEmailError(false);
+    setLoginError(false);
     setPasswordError(false);
 
-    if (email !== CORRECT_EMAIL || password !== CORRECT_PASSWORD) {
-      setError(
-        "Введенные вами данные не распознаны. Проверьте свой логин и пароль и повторите попытку входа"
-      );
-
-      if (email !== CORRECT_EMAIL) setEmailError(true);
-      if (password !== CORRECT_PASSWORD) setPasswordError(true);
-
+    if (!login || !password) {
+      setError("Заполните все поля");
+      if (!login) setLoginError(true);
+      if (!password) setPasswordError(true);
       return;
     }
 
-    setIsAuth(true);
-    localStorage.setItem("isAuth", "true");
-    navigate("/");
+    try {
+      setLoading(true);
+
+      console.log("Данные для входа:", { login, password });
+      const user = await loginUser({ login: login.trim(), password: password.trim() });
+
+
+      localStorage.setItem("token", user.token);
+      localStorage.setItem("userLogin", user.login);
+      setIsAuth(true);
+
+      navigate("/");
+    } catch (err) {
+      setError(err);
+      setLoginError(true);
+      setPasswordError(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -53,11 +65,11 @@ const LoginPage = ({ setIsAuth }) => {
 
         <form onSubmit={handleLogin}>
           <Input
-            type="email"
-            placeholder="Эл. почта"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            $error={emailError}
+            type="text"
+            placeholder="Логин"
+            value={login}
+            onChange={(e) => setLogin(e.target.value)}
+            $error={loginError}
           />
 
           <Input
@@ -68,15 +80,17 @@ const LoginPage = ({ setIsAuth }) => {
             $error={passwordError}
           />
 
-          <Button type="submit" disabled={!!error}>
-            Войти
+          <Button type="submit" disabled={loading}>
+            {loading ? "Входим..." : "Войти"}
           </Button>
+          
         </form>
 
         {error && <ErrorText>{error}</ErrorText>}
 
         <RegisterLink>
-          Нужно зарегистрироваться? <Link to="/register">Регистрируйтесь здесь</Link>
+          Нужно зарегистрироваться?{" "}
+          <Link to="/register">Регистрируйтесь здесь</Link>
         </RegisterLink>
       </LoginWrapper>
     </LoginForm>

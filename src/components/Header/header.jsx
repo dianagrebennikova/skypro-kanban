@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import PopUser from "../popups/popUser.jsx";
 import {
   HeaderWrapper,
   HeaderBlock,
@@ -9,10 +10,13 @@ import {
   UserName,
 } from "./header.styled.js";
 
-function Header() {
+function Header({ setIsAuth }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isExitOpen, setIsExitOpen] = useState(false);
 
   const handleToggle = () => setIsOpen((prev) => !prev);
+
+  const userLogin = localStorage.getItem("userLogin") || "Пользователь";
 
   return (
     <HeaderWrapper>
@@ -30,29 +34,36 @@ function Header() {
             </CreateButton>
 
             <UserName type="button" onClick={handleToggle}>
-              Ivan Ivanov
+              {userLogin}
             </UserName>
 
             {isOpen && (
               <div className="header__pop-user-set">
-                <p className="pop-user-set__name">Ivan Ivanov</p>
-                <p className="pop-user-set__mail">ivan.ivanov@gmail.com</p>
+                <p className="pop-user-set__name">{userLogin}</p>
 
                 <div className="pop-user-set__theme">
                   <p>Темная тема</p>
                   <input type="checkbox" />
                 </div>
 
-                <Link to="/exit">
-                  <button
-                    type="button"
-                    className="_hover03"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Выйти
-                  </button>
-                </Link>
+                <button
+                  type="button"
+                  className="_hover03"
+                  onClick={() => {
+                    setIsExitOpen(true);
+                    setIsOpen(false); 
+                  }}
+                >
+                  Выйти
+                </button>
               </div>
+            )}
+
+            {isExitOpen && (
+              <PopUser
+                setIsAuth={setIsAuth}
+                onClose={() => setIsExitOpen(false)}
+              />
             )}
           </Nav>
         </HeaderBlock>
