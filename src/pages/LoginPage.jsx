@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { loginUser } from "../services/user";
+import { useAuth } from "../context/useAuth";
 
 import {
   LoginForm,
@@ -12,12 +12,12 @@ import {
   ErrorText,
 } from "./LoginPage.styled";
 
-const LoginPage = ({ setIsAuth }) => {
+const LoginPage = () => {
   const navigate = useNavigate();
+  const { login: authLogin } = useAuth();
 
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
-
   const [error, setError] = useState("");
   const [loginError, setLoginError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
@@ -40,15 +40,12 @@ const LoginPage = ({ setIsAuth }) => {
     try {
       setLoading(true);
 
-      console.log("Данные для входа:", { login, password });
-      const user = await loginUser({ login: login.trim(), password: password.trim() });
+      await authLogin({
+        login: login.trim(),
+        password: password.trim(),
+      });
 
-
-      localStorage.setItem("token", user.token);
-      localStorage.setItem("userLogin", user.login);
-      setIsAuth(true);
-
-      navigate("/");
+      navigate("/", { replace: true });
     } catch (err) {
       setError(err);
       setLoginError(true);
@@ -83,7 +80,6 @@ const LoginPage = ({ setIsAuth }) => {
           <Button type="submit" disabled={loading}>
             {loading ? "Входим..." : "Войти"}
           </Button>
-          
         </form>
 
         {error && <ErrorText>{error}</ErrorText>}

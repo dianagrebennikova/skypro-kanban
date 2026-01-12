@@ -1,17 +1,15 @@
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/useAuth";
 
-function PopUser({ setIsAuth, onClose }) {
+function PopUser({ onClose }) {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const handleExit = (e) => {
     e.preventDefault();
-    localStorage.removeItem("token");
-    localStorage.removeItem("userLogin");
 
-    setIsAuth(false);
-
+    logout();          
     onClose?.();
-
     navigate("/login", { replace: true });
   };
 
