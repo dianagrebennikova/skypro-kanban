@@ -1,51 +1,61 @@
-    import { useEffect, useState } from "react";
-    import { AuthContext } from "./AuthContext";
-    import { loginUser, registerUser } from "../services/user";
+import { useEffect, useState } from "react";
+import { AuthContext } from "./AuthContext";
+import { loginUser, registerUser } from "../services/user";
 
-    export const AuthProvider = ({ children }) => {
-    const [isAuth, setIsAuth] = useState(
-        localStorage.getItem("isAuth") === "true"
-    );
+export const AuthProvider = ({ children }) => {
+  const [isAuth, setIsAuth] = useState(
+    localStorage.getItem("isAuth") === "true"
+  );
 
-    const [user, setUser] = useState(
-        localStorage.getItem("userLogin")
-        ? { login: localStorage.getItem("userLogin") }
-        : null
-    );
+  const [user, setUser] = useState(
+    localStorage.getItem("user")
+      ? JSON.parse(localStorage.getItem("user"))
+      : null
+  );
 
-    useEffect(() => {
-        localStorage.setItem("isAuth", isAuth);
-    }, [isAuth]);
+  useEffect(() => {
+    localStorage.setItem("isAuth", isAuth);
+  }, [isAuth]);
 
-    const login = async ({ login, password }) => {
-        const userData = await loginUser({ login, password });
+  const login = async ({ login, password }) => {
+    const userData = await loginUser({ login, password });
 
-        localStorage.setItem("token", userData.token);
-        localStorage.setItem("userLogin", userData.login);
-
-        setUser({ login: userData.login });
-        setIsAuth(true);
+    const user = {
+      login: userData.login,
+      name: userData.name,
     };
 
-    const register = async ({ login, password, name }) => {
-        const userData = await registerUser({ login, password, name });
+    localStorage.setItem("token", userData.token);
+    localStorage.setItem("user", JSON.stringify(user));
 
-        localStorage.setItem("token", userData.token);
-        localStorage.setItem("userLogin", userData.login);
+    setUser(user);
+    setIsAuth(true);
+  };
 
-        setUser({ login: userData.login });
-        setIsAuth(true);
+  const register = async ({ login, password, name }) => {
+    const userData = await registerUser({ login, password, name });
+
+    const user = {
+      login: userData.login,
+      name: userData.name,
     };
 
-    const logout = () => {
-        localStorage.clear();
-        setUser(null);
-        setIsAuth(false);
-    };
+    localStorage.setItem("token", userData.token);
+    localStorage.setItem("user", JSON.stringify(user));
 
-    return (
-        <AuthContext.Provider value={{ isAuth, user, login, register, logout }}>
-        {children}
-        </AuthContext.Provider>
-    );
-    };
+    setUser(user);
+    setIsAuth(true);
+  };
+
+  const logout = () => {
+    localStorage.clear();
+    setUser(null);
+    setIsAuth(false);
+  };
+
+  return (
+    <AuthContext.Provider value={{ isAuth, user, login, register, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};

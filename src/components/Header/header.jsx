@@ -42,7 +42,7 @@ function Header() {
             {isOpen && (
               <div className="header__pop-user-set">
                 <p className="pop-user-set__name">
-                  {user?.login || "Пользователь"}
+                  {user?.name || "Пользователь"}
                 </p>
 
                 <div className="pop-user-set__theme">
