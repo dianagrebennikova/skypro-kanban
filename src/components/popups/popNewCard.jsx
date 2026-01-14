@@ -1,7 +1,13 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import Calendar from "../Calendar/Calendar";
 import { useTasks } from "../../context/TaskContext";
-import { useState } from "react";
+
+const CATEGORY_MAP = {
+  "Web Design": "_orange",
+  Research: "_green",
+  Copywriting: "_purple",
+};
 
 function PopNewCard() {
   const navigate = useNavigate();
@@ -9,19 +15,30 @@ function PopNewCard() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [theme, setTheme] = useState("_orange");
+  const [topic, setTopic] = useState("Web Design");
+  const [date, setDate] = useState(null);
 
-  const handleClose = (e) => {
-    e.preventDefault();
+  const handleClose = () => {
     navigate(-1);
   };
 
   const handleCreate = (e) => {
     e.preventDefault();
-    if (!title.trim()) return alert("Введите название задачи");
 
-    addTask({ title, description, theme, date: new Date().toISOString() }); 
-    navigate(-1);
+    if (!title.trim()) {
+      alert("Введите название задачи");
+      return;
+    }
+
+    addTask({
+      title,
+      description,
+      topic, 
+      status: "Без статуса",
+      date,
+    });
+
+    navigate("/"); 
   };
 
   return (
@@ -36,9 +53,11 @@ function PopNewCard() {
             </button>
 
             <div className="pop-new-card__wrap">
-              <form className="pop-new-card__form form-new" id="formNewCard">
+              <form className="pop-new-card__form form-new">
                 <div className="form-new__block">
-                  <label htmlFor="formTitle" className="subttl">Название задачи</label>
+                  <label htmlFor="formTitle" className="subttl">
+                    Название задачи
+                  </label>
                   <input
                     className="form-new__input"
                     type="text"
@@ -51,7 +70,9 @@ function PopNewCard() {
                 </div>
 
                 <div className="form-new__block">
-                  <label htmlFor="textArea" className="subttl">Описание задачи</label>
+                  <label htmlFor="textArea" className="subttl">
+                    Описание задачи
+                  </label>
                   <textarea
                     className="form-new__area"
                     id="textArea"
@@ -60,36 +81,41 @@ function PopNewCard() {
                     onChange={(e) => setDescription(e.target.value)}
                   />
                 </div>
-              </form>
 
-              <Calendar />
+                
+              </form>
+              <div className="form-new__block">
+
+                  <Calendar
+                    date={date}
+                    variant="full"
+                    onChange={(newDate) => setDate(newDate)}
+                  />
+                </div>
             </div>
 
             <div className="pop-new-card__categories categories">
               <p className="categories__p subttl">Категория</p>
+
               <div className="categories__themes">
-                <div
-                  className={`categories__theme _orange ${theme === "_orange" ? "_active-category" : ""}`}
-                  onClick={() => setTheme("_orange")}
-                >
-                  <p className="_orange">Web Design</p>
-                </div>
-                <div
-                  className={`categories__theme _green ${theme === "_green" ? "_active-category" : ""}`}
-                  onClick={() => setTheme("_green")}
-                >
-                  <p className="_green">Research</p>
-                </div>
-                <div
-                  className={`categories__theme _purple ${theme === "_purple" ? "_active-category" : ""}`}
-                  onClick={() => setTheme("_purple")}
-                >
-                  <p className="_purple">Copywriting</p>
-                </div>
+                {Object.keys(CATEGORY_MAP).map((cat) => (
+                  <div
+                    key={cat}
+                    className={`categories__theme ${CATEGORY_MAP[cat]} ${
+                      topic === cat ? "_active-category" : ""
+                    }`}
+                    onClick={() => setTopic(cat)}
+                  >
+                    <p className={CATEGORY_MAP[cat]}>{cat}</p>
+                  </div>
+                ))}
               </div>
             </div>
 
-            <button className="form-new__create _hover01" onClick={handleCreate}>
+            <button
+              className="form-new__create _hover01"
+              onClick={handleCreate}
+            >
               Создать задачу
             </button>
           </div>

@@ -11,26 +11,16 @@ import {
 } from "./card.styled.js";
 import { Link } from "react-router-dom";
 
-const themeColors = {
-  _orange: { bg: "#FFE4C2", text: "#FF6D00" },
-  _green: { bg: "#B4FDD1", text: "#06B16E" },
-  _purple: { bg: "#E9D4FF", text: "#9A48F1" },
-  _gray: { bg: "#94A6BE", text: "#FFFFFF" },
+const themeColorsMap = {
+  "Web Design": { bg: "#FFE4C2", text: "#FF6D00" },
+  Research: { bg: "#B4FDD1", text: "#06B16E" },
+  Copywriting: { bg: "#E9D4FF", text: "#9A48F1" },
+  Other: { bg: "#94A6BE", text: "#FFFFFF" },
 };
 
-const Card = ({ id, theme, title, date }) => {
- 
-  const colors = themeColors[theme] || { bg: "#fff", text: "#000" };
-
-
-  const themeLabel =
-    theme === "_orange"
-      ? "Web Design"
-      : theme === "_green"
-      ? "Research"
-      : theme === "_purple"
-      ? "Copywriting"
-      : "Other";
+const Card = ({ id, topic, title, date }) => {
+  const colors = themeColorsMap[topic] || themeColorsMap["Other"];
+  const themeLabel = topic || "Other";
 
   return (
     <Link to={`/card/${id}`}>

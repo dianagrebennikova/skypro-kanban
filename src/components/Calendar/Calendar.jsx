@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   CalendarWrapper,
   CalendarBlock,
@@ -19,23 +19,53 @@ import {
 
 const DAYS = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"];
 
-export default function Calendar({ date, variant = "full" }) {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDay, setSelectedDay] = useState(
-    date ? Number(date.split(".")[0]) : null
-  );
+function parseDate(dateStr) {
+  if (!dateStr) return null;
 
+  const parts = dateStr.split(".");
+  if (parts.length === 3) {
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1;
+    const year = parseInt(parts[2], 10);
+    return new Date(year, month, day);
+  }
+
+  const d = new Date(dateStr);
+  return isNaN(d) ? null : d;
+}
+
+export default function Calendar({ date, variant = "full", onChange })  {
+  const initialDate = parseDate(date) || null;
+  const [currentDate, setCurrentDate] = useState(initialDate || new Date());
+  const [selectedDate, setSelectedDate] = useState(initialDate);
+
+  useEffect(() => {
+    const parsed = parseDate(date);
+  
+    if (!parsed) {
+      setTimeout(() => {
+        setSelectedDate(null);
+        setCurrentDate(new Date());
+      }, 0);
+      return;
+    }
+
+    setTimeout(() => {
+      setSelectedDate(parsed);
+      setCurrentDate(parsed);
+    }, 0);
+  }, [date]);
+  
   if (variant === "compact") {
     let formattedDate = "Без даты";
-  
-    if (date) {
-      const d = new Date(date);
-      const day = String(d.getDate()).padStart(2, "0");
-      const month = String(d.getMonth() + 1).padStart(2, "0");
-      const year = String(d.getFullYear()).slice(-2);
+
+    if (selectedDate) {
+      const day = String(selectedDate.getDate()).padStart(2, "0");
+      const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
+      const year = String(selectedDate.getFullYear()).slice(-2);
       formattedDate = `${day}.${month}.${year}`;
     }
-  
+
     return (
       <CalendarWrapper>
         <svg
@@ -57,12 +87,12 @@ export default function Calendar({ date, variant = "full" }) {
             strokeLinecap="round"
           />
         </svg>
-  
+
         <CalendarText>{formattedDate}</CalendarText>
       </CalendarWrapper>
     );
   }
-  
+
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
@@ -85,6 +115,11 @@ export default function Calendar({ date, variant = "full" }) {
   // текущий месяц
   for (let i = 1; i <= daysInMonth; i++) {
     const dayOfWeek = new Date(year, month, i).getDay();
+    const isActive =
+      selectedDate &&
+      selectedDate.getDate() === i &&
+      selectedDate.getMonth() === month &&
+      selectedDate.getFullYear() === year;
 
     cells.push({
       day: i,
@@ -92,7 +127,7 @@ export default function Calendar({ date, variant = "full" }) {
         i === new Date().getDate() &&
         month === new Date().getMonth() &&
         year === new Date().getFullYear(),
-      active: i === selectedDay,
+      active: isActive,
       weekend: dayOfWeek === 0 || dayOfWeek === 6,
     });
   }
@@ -106,8 +141,25 @@ export default function Calendar({ date, variant = "full" }) {
     setCurrentDate(
       new Date(year, month + (direction === "next" ? 1 : -1), 1)
     );
-    setSelectedDay(null);
   };
+  const handleSelectDay = (day) => {
+    const newDate = new Date(year, month, day);
+  
+    setSelectedDate(newDate);
+    setCurrentDate(newDate);
+  
+    if (onChange) {
+      onChange(newDate.toISOString());
+    }
+  };
+  
+  
+
+  const displayText = selectedDate
+    ? `Срок исполнения: ${String(selectedDate.getDate()).padStart(2, "0")}.${String(
+        selectedDate.getMonth() + 1
+      ).padStart(2, "0")}.${selectedDate.getFullYear()}`
+    : "Выберите срок исполнения";
 
   return (
     <CalendarWrapper>
@@ -150,7 +202,7 @@ export default function Calendar({ date, variant = "full" }) {
                   ${cell.active ? "_active-day" : ""}
                 `}
                 onClick={() =>
-                  !cell.otherMonth && cell.day && setSelectedDay(cell.day)
+                  !cell.otherMonth && cell.day && handleSelectDay(cell.day)
                 }
               >
                 {cell.day}
@@ -159,17 +211,9 @@ export default function Calendar({ date, variant = "full" }) {
           </CalendarCells>
         </CalendarContent>
 
-        {selectedDay && (
-          <CalendarPeriod>
-            <CalendarPeriodText>
-              Срок исполнения:{" "}
-              <span>
-                {String(selectedDay).padStart(2, "0")}.
-                {String(month + 1).padStart(2, "0")}.{year}
-              </span>
-            </CalendarPeriodText>
-          </CalendarPeriod>
-        )}
+        <CalendarPeriod>
+          <CalendarPeriodText>{displayText}</CalendarPeriodText>
+        </CalendarPeriod>
       </CalendarBlock>
     </CalendarWrapper>
   );
