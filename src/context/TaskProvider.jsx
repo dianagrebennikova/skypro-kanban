@@ -1,4 +1,3 @@
-// TaskProvider.js
 import { useState, useEffect } from "react";
 import { TaskContext } from "./TaskContext";
 import { getTasks, createTask, updateTask, deleteTask } from "../services/kanban";
@@ -37,41 +36,57 @@ export const TaskProvider = ({ children }) => {
   // Добавление новой задачи
   const addTask = async (task) => {
     try {
-      const allTasks = await createTask(task);
+      setError(null);
+      setIsLoading(true);
 
-      const createdTask = allTasks.find(
-        (t) => t.title === task.title && t.date === task.date
-      );
-  
-      if (createdTask) {
-        setTasks((prev) => [...prev, createdTask]); 
-      }
+      // Получаем обновленный список задач с сервера
+      const updatedTasks = await createTask(task);
+      setTasks(updatedTasks);
+
+      return true; 
     } catch {
       setError("Ошибка добавления задачи");
+      return false;
+    } finally {
+      setIsLoading(false);
     }
   };
-  
 
-  // Редактирование задачи 
+  // Редактирование задачи
   const editTask = async (id, updatedTask) => {
     try {
-      setTasks((prev) =>
-        prev.map((t) => (t._id === id || t.id === id ? { ...t, ...updatedTask } : t))
-      );
+      setError(null);
+      setIsLoading(true);
 
-      await updateTask(id, updatedTask);
+      // Получаем обновленный список задач с сервера
+      const updatedTasks = await updateTask(id, updatedTask);
+      setTasks(updatedTasks);
+
+      return true;
     } catch {
       setError("Ошибка редактирования задачи");
+      return false;
+    } finally {
+      setIsLoading(false);
     }
   };
 
   // Удаление задачи
   const removeTask = async (id) => {
     try {
-      await deleteTask(id);
-      setTasks((prev) => prev.filter((t) => t._id !== id && t.id !== id));
+      setError(null);
+      setIsLoading(true);
+
+      // Получаем обновленный список задач с сервера
+      const updatedTasks = await deleteTask(id);
+      setTasks(updatedTasks);
+
+      return true;
     } catch {
       setError("Ошибка удаления задачи");
+      return false;
+    } finally {
+      setIsLoading(false);
     }
   };
 

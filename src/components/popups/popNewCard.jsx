@@ -17,12 +17,13 @@ function PopNewCard() {
   const [description, setDescription] = useState("");
   const [topic, setTopic] = useState("Web Design");
   const [date, setDate] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleClose = () => {
     navigate(-1);
   };
 
-  const handleCreate = (e) => {
+  const handleCreate = async (e) => {
     e.preventDefault();
 
     if (!title.trim()) {
@@ -30,15 +31,23 @@ function PopNewCard() {
       return;
     }
 
-    addTask({
+    setIsLoading(true);
+
+    const success = await addTask({
       title,
       description,
-      topic, 
+      topic,
       status: "Без статуса",
       date,
     });
 
-    navigate("/"); 
+    setIsLoading(false);
+
+    if (success) {
+      navigate(-1);
+    } else {
+      alert("Не удалось создать задачу");
+    }
   };
 
   return (
@@ -81,17 +90,15 @@ function PopNewCard() {
                     onChange={(e) => setDescription(e.target.value)}
                   />
                 </div>
-
-                
               </form>
-              <div className="form-new__block">
 
-                  <Calendar
-                    date={date}
-                    variant="full"
-                    onChange={(newDate) => setDate(newDate)}
-                  />
-                </div>
+              <div className="form-new__block">
+                <Calendar
+                  date={date}
+                  variant="full"
+                  onChange={(newDate) => setDate(newDate)}
+                />
+              </div>
             </div>
 
             <div className="pop-new-card__categories categories">
@@ -115,8 +122,9 @@ function PopNewCard() {
             <button
               className="form-new__create _hover01"
               onClick={handleCreate}
+              disabled={isLoading}
             >
-              Создать задачу
+              {isLoading ? "Создание..." : "Создать задачу"}
             </button>
           </div>
         </div>

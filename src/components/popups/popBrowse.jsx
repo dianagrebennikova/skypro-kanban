@@ -23,13 +23,12 @@ function PopBrowse() {
   const { tasks, editTask, removeTask } = useContext(TaskContext);
 
   const task = useMemo(() => {
-    return (
-      tasks.find((t) => String(t._id) === id || String(t.id) === id) || null
-    );
+    return tasks.find((t) => String(t._id) === id || String(t.id) === id) || null;
   }, [tasks, id]);
 
   const [isEdit, setIsEdit] = useState(false);
   const [draft, setDraft] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (task) {
@@ -44,15 +43,34 @@ function PopBrowse() {
   };
 
   const handleDelete = async () => {
-    await removeTask(task._id || task.id);
-    navigate(-1);
+    if (!task) return;
+    setIsLoading(true);
+
+    const success = await removeTask(task._id || task.id);
+
+    setIsLoading(false);
+
+    if (success) {
+      navigate(-1); 
+    } else {
+      alert("Не удалось удалить задачу");
+    }
   };
 
   const handleSave = async () => {
     if (!draft) return;
-    await editTask(task._id || task.id, draft);
-    setIsEdit(false);
-    navigate("/"); 
+    setIsLoading(true);
+
+    const success = await editTask(task._id || task.id, draft);
+
+    setIsLoading(false);
+
+    if (success) {
+      setIsEdit(false);
+      navigate(-1); 
+    } else {
+      alert("Не удалось сохранить задачу");
+    }
   };
 
   const handleCancel = () => {
@@ -71,9 +89,7 @@ function PopBrowse() {
         <div className="pop-browse__block">
           <div className="pop-browse__content">
             <div className="pop-browse__top-block">
-              <h3 className="pop-browse__ttl">
-                {draft.title || "Без названия"}
-              </h3>
+              <h3 className="pop-browse__ttl">{draft.title || "Без названия"}</h3>
               <div
                 className={`categories__theme theme-top _active-category ${categoryClass}`}
               >
@@ -127,27 +143,27 @@ function PopBrowse() {
             <div className="pop-browse__btn-browse">
               {isEdit ? (
                 <>
-                  <button className="btn _save" onClick={handleSave}>
-                    Сохранить
+                  <button className="btn _save" onClick={handleSave} disabled={isLoading}>
+                    {isLoading ? "Сохранение..." : "Сохранить"}
                   </button>
-                  <button className="btn _cancel" onClick={handleCancel}>
+                  <button className="btn _cancel" onClick={handleCancel} disabled={isLoading}>
                     Отменить
                   </button>
-                  <button className="btn _delete" onClick={handleDelete}>
-                    Удалить задачу
+                  <button className="btn _delete" onClick={handleDelete} disabled={isLoading}>
+                    {isLoading ? "Удаление..." : "Удалить задачу"}
                   </button>
                 </>
               ) : (
                 <>
-                  <button className="btn _edit" onClick={() => setIsEdit(true)}>
+                  <button className="btn _edit" onClick={() => setIsEdit(true)} disabled={isLoading}>
                     Редактировать задачу
                   </button>
-                  <button className="btn _delete" onClick={handleDelete}>
-                    Удалить задачу
+                  <button className="btn _delete" onClick={handleDelete} disabled={isLoading}>
+                    {isLoading ? "Удаление..." : "Удалить задачу"}
                   </button>
                 </>
               )}
-              <button className="btn _close" onClick={handleClose}>
+              <button className="btn _close" onClick={handleClose} disabled={isLoading}>
                 Закрыть
               </button>
             </div>
