@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../context/useAuth";
 import PopUser from "../popups/popUser.jsx";
+
 import {
   HeaderWrapper,
   HeaderBlock,
@@ -10,13 +12,13 @@ import {
   UserName,
 } from "./header.styled.js";
 
-function Header({ setIsAuth }) {
+function Header() {
+  const { user } = useAuth();
+
   const [isOpen, setIsOpen] = useState(false);
   const [isExitOpen, setIsExitOpen] = useState(false);
 
   const handleToggle = () => setIsOpen((prev) => !prev);
-
-  const userLogin = localStorage.getItem("userLogin") || "Пользователь";
 
   return (
     <HeaderWrapper>
@@ -34,12 +36,14 @@ function Header({ setIsAuth }) {
             </CreateButton>
 
             <UserName type="button" onClick={handleToggle}>
-              {userLogin}
+              {user?.login || "Пользователь"}
             </UserName>
 
             {isOpen && (
               <div className="header__pop-user-set">
-                <p className="pop-user-set__name">{userLogin}</p>
+                <p className="pop-user-set__name">
+                  {user?.name || "Пользователь"}
+                </p>
 
                 <div className="pop-user-set__theme">
                   <p>Темная тема</p>
@@ -51,7 +55,7 @@ function Header({ setIsAuth }) {
                   className="_hover03"
                   onClick={() => {
                     setIsExitOpen(true);
-                    setIsOpen(false); 
+                    setIsOpen(false);
                   }}
                 >
                   Выйти
@@ -60,10 +64,7 @@ function Header({ setIsAuth }) {
             )}
 
             {isExitOpen && (
-              <PopUser
-                setIsAuth={setIsAuth}
-                onClose={() => setIsExitOpen(false)}
-              />
+              <PopUser onClose={() => setIsExitOpen(false)} />
             )}
           </Nav>
         </HeaderBlock>

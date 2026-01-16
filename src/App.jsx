@@ -1,16 +1,16 @@
-import { useState, useEffect } from "react";
 import AppRoutes from "./AppRoutes";
+import { AuthProvider } from "./context/AuthProvider";
+import { TaskProvider } from "./context/TaskProvider";
+
 
 function App() {
-  const [isAuth, setIsAuth] = useState(() => {
-    return localStorage.getItem("isAuth") === "true";
-  });
-
-  useEffect(() => {
-    localStorage.setItem("isAuth", isAuth);
-  }, [isAuth]);
-
-  return <AppRoutes isAuth={isAuth} setIsAuth={setIsAuth} />;
+  return (
+    <AuthProvider>
+      <TaskProvider>
+        <AppRoutes />
+        </TaskProvider>
+    </AuthProvider>
+  );
 }
 
 export default App;

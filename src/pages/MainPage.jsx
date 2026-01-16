@@ -1,47 +1,31 @@
 import "../App.css";
-import { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom";
-
+import { Outlet, useNavigate } from "react-router-dom";
 import Header from "../components/Header/header.jsx";
 import Main from "../components/Main/main.jsx";
-
-import { getTasks } from "../services/kanban.js";
+import { useTasks } from "../context/useTasks";
 import { Wrapper, LoadingText } from "./MainPage.styled";
 
-function MainPage({ setIsAuth }) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [cards, setCards] = useState([]);
-  const [error, setError] = useState("");
+function MainPage() {
+  const { tasks, isLoading, error } = useTasks();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        setIsLoading(true);
-        const tasks = await getTasks();
-        setCards(tasks);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const handleCardClick = (id) => {
+    navigate(`/card/${id}`);
+  };
 
-    fetchTasks();
-  }, []);
+  const handleAddTask = () => {
+    navigate("/add-task");
+  };
 
   return (
     <div className="wrapper">
-      <Header setIsAuth={setIsAuth} />
-
+      <Header onAddTask={handleAddTask} />
       <Wrapper>
         {isLoading && <LoadingText>Данные загружаются...</LoadingText>}
-
         {error && <LoadingText>{error}</LoadingText>}
-
-        {!isLoading && !error && <Main cards={cards} />}
+        {!isLoading && !error && <Main cards={tasks} onCardClick={handleCardClick} />}
       </Wrapper>
-
-      <Outlet />
+      <Outlet /> 
     </div>
   );
 }

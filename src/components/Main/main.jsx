@@ -1,44 +1,56 @@
 import Column from "../Column/Column";
-import { MainWrapper, Container, MainBlock, MainContent, MainColumn } from "./main.styled";
+import {
+  MainWrapper,
+  Container,
+  MainBlock,
+  MainContent,
+  MainColumn,
+} from "./main.styled";
+
+const CATEGORY_COLOR = {
+  "Web Design": "_orange",
+  Research: "_green",
+  Copywriting: "_purple",
+  Other: "_gray",
+};
+
+const STATUSES = [
+  "Без статуса",
+  "Нужно сделать",
+  "В работе",
+  "Тестирование",
+  "Готово",
+];
 
 const Main = ({ cards = [] }) => {
-  
-  const cardsWithoutStatus = cards.filter((c) => c.status === "Без статуса") || [];
-  const cardsToDo = cards.filter((c) => c.status === "Нужно сделать") || [];
-  const cardsInProgress = cards.filter((c) => c.status === "В работе") || [];
-  const cardsTesting = cards.filter((c) => c.status === "Тестирование") || [];
-  const cardsDone = cards.filter((c) => c.status === "Готово") || [];
-
-  const defaultTheme = "_gray";
+  const cardsByStatus = STATUSES.reduce((acc, status) => {
+    acc[status] = cards.filter((c) => c.status === status) || [];
+    return acc;
+  }, {});
 
   const normalizeCards = (cardsArray) =>
-    cardsArray.map((c, index) => ({
-      id: c.id || index,
-      theme: c.theme || defaultTheme,
+    cardsArray.map((c) => ({
+      id: c._id,
+      topic: c.topic || "Other",
+      theme: CATEGORY_COLOR[c.topic] || "_gray",
       title: c.title || "Без названия",
-      date: c.date || new Date().toISOString(),
+      date: c.date || null, 
     }));
+  
 
   return (
     <MainWrapper>
       <Container>
         <MainBlock>
           <MainContent>
-            <MainColumn>
-              <Column title="Без статуса" cards={normalizeCards(cardsWithoutStatus)} />
-            </MainColumn>
-            <MainColumn>
-              <Column title="Нужно сделать" cards={normalizeCards(cardsToDo)} />
-            </MainColumn>
-            <MainColumn>
-              <Column title="В работе" cards={normalizeCards(cardsInProgress)} />
-            </MainColumn>
-            <MainColumn>
-              <Column title="Тестирование" cards={normalizeCards(cardsTesting)} />
-            </MainColumn>
-            <MainColumn>
-              <Column title="Готово" cards={normalizeCards(cardsDone)} />
-            </MainColumn>
+            {STATUSES.map((status) => (
+              <MainColumn key={status}>
+                <Column
+                  title={status}
+                  cards={normalizeCards(cardsByStatus[status])}
+                />
+              </MainColumn>
+            ))}
           </MainContent>
         </MainBlock>
       </Container>

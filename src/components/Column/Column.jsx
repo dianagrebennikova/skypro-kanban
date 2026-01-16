@@ -14,7 +14,7 @@ export default function Column({ title, cards }) {
           <Card
             key={card.id || index}
             id={card.id}
-            theme={card.theme}
+            topic={card.topic}
             title={card.title}
             date={card.date}
           />

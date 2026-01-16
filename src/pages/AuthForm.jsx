@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { loginUser, registerUser } from "../services/user";
+import { useAuth } from "../context/useAuth";
 
 import {
   Bg,
@@ -15,43 +15,48 @@ import {
   ErrorText,
 } from "./AuthForm.styled";
 
-const AuthForm = ({ isSignUp, setIsAuth }) => {
+const AuthForm = ({ isSignUp }) => {
   const navigate = useNavigate();
+  const { login, register } = useAuth();
 
-  const [login, setLogin] = useState("");
+  const [loginValue, setLoginValue] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-  
-    if (!login || !password || (isSignUp && !name)) {
+
+    if (!loginValue || !password || (isSignUp && !name)) {
       setError("Заполните все поля");
       return;
     }
-  
+
     try {
       setLoading(true);
-  
-      let user = isSignUp
-        ? await registerUser({ login: login.trim(), password: password.trim(), name: name.trim() })
-        : await loginUser({ login: login.trim(), password: password.trim() });
-  
-      localStorage.setItem("token", user.token);
-      localStorage.setItem("userLogin", user.login);
-      setIsAuth(true);
-      navigate("/");
+
+      if (isSignUp) {
+        await register({
+          login: loginValue.trim(),
+          password: password.trim(),
+          name: name.trim(),
+        });
+      } else {
+        await login({
+          login: loginValue.trim(),
+          password: password.trim(),
+        });
+      }
+
+      navigate("/", { replace: true });
     } catch (err) {
       setError(err);
     } finally {
       setLoading(false);
     }
   };
-  
 
   return (
     <Bg>
@@ -73,8 +78,8 @@ const AuthForm = ({ isSignUp, setIsAuth }) => {
               <Input
                 type="text"
                 placeholder="Логин"
-                value={login}
-                onChange={(e) => setLogin(e.target.value)}
+                value={loginValue}
+                onChange={(e) => setLoginValue(e.target.value)}
                 autoComplete="username"
               />
 
@@ -95,19 +100,18 @@ const AuthForm = ({ isSignUp, setIsAuth }) => {
                 : "Войти"}
             </Button>
 
-                    {error && <ErrorText>{error}</ErrorText>}
-            
+            {error && <ErrorText>{error}</ErrorText>}
 
             {!isSignUp && (
               <FormGroup>
-                Нужно зарегистрироваться?
+                Нужно зарегистрироваться?{" "}
                 <Link to="/register">Регистрируйтесь здесь</Link>
               </FormGroup>
             )}
 
             {isSignUp && (
               <FormGroup>
-                Есть аккаунт?
+                Есть аккаунт?{" "}
                 <Link to="/login">Войдите здесь</Link>
               </FormGroup>
             )}
