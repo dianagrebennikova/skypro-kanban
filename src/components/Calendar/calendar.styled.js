@@ -18,6 +18,10 @@ export const CalendarBlock = styled.div`
 export const CalendarTitle = styled.p`
   margin-bottom: 14px;
   padding: 0 7px;
+
+  @media screen and (max-width: 660px) {
+    padding: 0px;
+  }
 `;
 
 export const CalendarNav = styled.div`
@@ -26,6 +30,10 @@ export const CalendarNav = styled.div`
   align-items: center;
   padding: 0 7px;
   margin-bottom: 8px;
+
+  @media screen and (max-width: 660px) {
+    padding: 0px;
+  }
 `;
 
 export const CalendarMonth = styled.div`
@@ -59,11 +67,18 @@ export const CalendarDaysNames = styled.div`
   justify-content: space-between;
   margin: 7px 0;
   padding: 0 7px;
+
+  @media screen and (max-width: 660px) {
+    padding: 0px 15px;
+  }
 `;
 
 export const CalendarDayName = styled.div`
   font-size: 10px;
   color: #94a6be;
+  @media screen and (max-width: 660px) {
+    font-size: 14px;
+  }
   `;
 
 export const CalendarText = styled.p`
@@ -73,12 +88,16 @@ export const CalendarText = styled.p`
 
   @media screen and (max-width: 660px) {
     font-size: 14px;
+    padding: 0px;
   }
 `;
 
 export const CalendarCells = styled.div`
   display: flex;
   flex-wrap: wrap;
+  @media screen and (max-width: 660px){
+  justify-content: space-between;
+  }
 `;
 
 export const CalendarCell = styled.div`
@@ -91,7 +110,9 @@ export const CalendarCell = styled.div`
   justify-content: center;
   font-size: 10px;
   cursor: pointer;
-  color: #94a6be;
+
+  color: ${({ $today }) => ($today ? "#94A6BE" : "#94a6be")};
+  font-weight: ${({ $today }) => ($today ? 700 : 400)};
 
   &:hover {
     background-color: #eaeef6;
@@ -100,9 +121,6 @@ export const CalendarCell = styled.div`
   &._active-day {
     background-color: #94a6be;
     color: #ffffff;
-  }
-
-  &._current {
     font-weight: 700;
   }
 
@@ -110,6 +128,7 @@ export const CalendarCell = styled.div`
     opacity: 0.4;
     pointer-events: none;
   }
+
 
   @media screen and (max-width: 660px) {
     width: 42px;
@@ -121,6 +140,9 @@ export const CalendarCell = styled.div`
 export const CalendarPeriod = styled.div`
   margin-top: 12px;
   padding: 0 7px;
+  @media screen and (max-width: 660px) {
+    padding: 0px;
+  }
 `;
 
 export const CalendarPeriodText = styled.p`
@@ -128,7 +150,7 @@ export const CalendarPeriodText = styled.p`
   color: #94a6be;
 
   span {
-    color: #000000;
+    color: ${({ theme }) => theme.colors.text}; 
     font-weight: 500;
   }
 

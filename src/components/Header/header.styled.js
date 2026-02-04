@@ -2,7 +2,8 @@ import styled from "styled-components";
 
 export const HeaderWrapper = styled.header`
   width: 100%;
-  background-color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.headerBg};
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 export const HeaderBlock = styled.div`
@@ -27,8 +28,6 @@ export const Nav = styled.nav`
   position: relative;
 `;
 
-
-
 export const CreateButton = styled.button`
   width: 178px;
   height: 30px;
@@ -48,9 +47,13 @@ export const CreateButton = styled.button`
   a {
     color: #ffffff;
     font-family: "Roboto", Arial, Helvetica, sans-serif;
-  cursor: pointer;
-  text-decoration: none;
+    cursor: pointer;
+    text-decoration: none;
   }
+
+  @media screen and (max-width: 660px) {
+  display: none;
+}
 `;
 
 export const UserName = styled.button`
@@ -61,11 +64,11 @@ export const UserName = styled.button`
   align-items: center;
   font-size: 14px;
   line-height: 20px;
-  color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.text};
   cursor: pointer;
 
   &:hover {
-    color: ${({ theme }) => theme.colors.primaryHover};
+    color: ${({ theme }) => theme.colors.primary};
   }
 
   &::after {
@@ -78,4 +81,43 @@ export const UserName = styled.button`
     transform: rotate(-45deg);
   }
 `;
- 
+
+
+export const MobileCreateButton = styled.button`
+  display: none;
+
+  @media screen and (max-width: 660px) {
+    display: flex;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 400px;
+    height: 50px;
+    border-radius: 8px;
+    background-color: ${({ theme }) => theme.colors.primary};
+    color: #ffffff;
+    border: none;
+    font-size: 16px;
+    font-weight: 500;
+    justify-content: center;
+    align-items: center;
+    z-index: 999; 
+    cursor: pointer;
+
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.primaryHover};
+    }
+
+    a {
+      color: #ffffff;
+      text-decoration: none;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+`;

@@ -1,14 +1,28 @@
 import AppRoutes from "./AppRoutes";
 import { AuthProvider } from "./context/AuthProvider";
 import { TaskProvider } from "./context/TaskProvider";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-
-function App() {
+function App({ isDark, toggleTheme }) {
   return (
     <AuthProvider>
       <TaskProvider>
-        <AppRoutes />
-        </TaskProvider>
+        <>
+          <AppRoutes isDark={isDark} toggleTheme={toggleTheme} />
+
+          <ToastContainer
+            position="top-right"
+            autoClose={2500}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            pauseOnHover
+            draggable
+            theme={isDark ? "dark" : "light"} 
+          />
+        </>
+      </TaskProvider>
     </AuthProvider>
   );
 }

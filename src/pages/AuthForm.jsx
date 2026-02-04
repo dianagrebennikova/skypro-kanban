@@ -51,8 +51,8 @@ const AuthForm = ({ isSignUp }) => {
       }
 
       navigate("/", { replace: true });
-    } catch (err) {
-      setError(err);
+    } catch  {
+      setError("Введенные вами данные не корректны. Чтобы завершить регистрацию, введите данные корректно и повторите попытку.");
     } finally {
       setLoading(false);
     }

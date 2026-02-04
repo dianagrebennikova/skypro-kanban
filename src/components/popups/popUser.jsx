@@ -1,14 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
+import { useState } from "react";
 
 function PopUser({ onClose }) {
   const navigate = useNavigate();
   const { logout } = useAuth();
 
+  const [isDarkTheme] = useState(() => {
+    return localStorage.getItem("theme") === "dark";
+  });
+
   const handleExit = (e) => {
     e.preventDefault();
-
-    logout();          
+    logout();
     onClose?.();
     navigate("/login", { replace: true });
   };
@@ -21,7 +25,7 @@ function PopUser({ onClose }) {
   return (
     <div className="pop-exit" id="popExit">
       <div className="pop-exit__container">
-        <div className="pop-exit__block">
+        <div className={`pop-exit__block ${isDarkTheme ? "dark-mode" : ""}`}>
           <div className="pop-exit__ttl">
             <h2>Выйти из аккаунта?</h2>
           </div>

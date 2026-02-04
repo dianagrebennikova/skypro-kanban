@@ -2,6 +2,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useMemo, useState, useEffect } from "react";
 import Calendar from "../Calendar/Calendar";
 import { TaskContext } from "../../context/TaskContext";
+import { toast } from "react-toastify";
+
 
 const STATUSES = [
   "Без статуса",
@@ -15,6 +17,7 @@ const CATEGORY_COLOR = {
   "Web Design": "_orange",
   Research: "_green",
   Copywriting: "_purple",
+  Other: "_grey",
 };
 
 function PopBrowse() {
@@ -29,6 +32,11 @@ function PopBrowse() {
   const [isEdit, setIsEdit] = useState(false);
   const [draft, setDraft] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDarkTheme] = useState(() => localStorage.getItem("theme") === "dark");
+
+  const [titleError, setTitleError] = useState(false);
+  const [descriptionError, setDescriptionError] = useState(false);
+
 
   useEffect(() => {
     if (task) {
@@ -37,61 +45,91 @@ function PopBrowse() {
     }
   }, [task]);
 
-  const handleClose = (e) => {
-    e.preventDefault();
-    navigate(-1);
-  };
+  const handleClose = () => navigate(-1);
 
   const handleDelete = async () => {
     if (!task) return;
     setIsLoading(true);
-
     const success = await removeTask(task._id || task.id);
-
     setIsLoading(false);
 
     if (success) {
-      navigate(-1); 
+      toast.success("Задача удалена");
+      navigate(-1);
     } else {
-      alert("Не удалось удалить задачу");
+      toast.error("Не удалось удалить задачу");
     }
   };
 
   const handleSave = async () => {
     if (!draft) return;
+
+    let hasError = false;
+    if (!draft.title.trim()) {
+      setTitleError(true);
+      hasError = true;
+    } else setTitleError(false);
+
+    if (!draft.description.trim()) {
+      setDescriptionError(true);
+      hasError = true;
+    } else setDescriptionError(false);
+
+    if (hasError) {
+      toast.error("Пожалуйста, заполните обязательные поля");
+      return;
+    }
+
     setIsLoading(true);
+    try {
+      const success = await editTask(task._id || task.id, {
+        ...draft,
+        title: draft.title.trim(),
+        description: draft.description.trim(),
+      });
 
-    const success = await editTask(task._id || task.id, draft);
-
-    setIsLoading(false);
-
-    if (success) {
-      setIsEdit(false);
-      navigate(-1); 
-    } else {
-      alert("Не удалось сохранить задачу");
+      if (success) {
+        toast.success("Задача сохранена");
+        setIsEdit(false);
+        navigate(-1);
+      } else {
+        toast.error("Не удалось сохранить задачу");
+      }
+    } catch (err) {
+      toast.error(err || "Ошибка сервера при сохранении задачи");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleCancel = () => {
     setDraft({ ...task });
     setIsEdit(false);
+    setTitleError(false);
+    setDescriptionError(false);
   };
 
   if (!task || !draft) return null;
 
   const category = draft.topic || "Other";
-  const categoryClass = CATEGORY_COLOR[draft.topic] || "_grey";
 
   return (
     <div className="pop-browse">
-      <div className="pop-browse__container">
-        <div className="pop-browse__block">
+      <div className="pop-browse__container" onClick={handleClose}>
+        <div
+          className={`pop-browse__block ${isDarkTheme ? "dark-mode" : ""}`}
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="pop-browse__content">
             <div className="pop-browse__top-block">
-              <h3 className="pop-browse__ttl">{draft.title || "Без названия"}</h3>
+              <h3 className={`pop-browse__ttl ${titleError ? "_error" : ""}`}>
+                {draft.title || "Без названия"}
+              </h3>
+
               <div
-                className={`categories__theme theme-top _active-category ${categoryClass}`}
+                className={`categories__theme theme-top _active-category ${
+                  CATEGORY_COLOR[category] || "_grey"
+                }`}
               >
                 <p>{category}</p>
               </div>
@@ -99,25 +137,24 @@ function PopBrowse() {
 
             <div className="pop-browse__status status">
               <p className="status__p subttl">Статус</p>
-
               <div className="status__themes">
-                {isEdit ? (
-                  STATUSES.map((status) => (
-                    <div
-                      key={status}
-                      className={`status__theme ${
-                        draft.status === status ? "_active" : ""
-                      }`}
-                      onClick={() => setDraft({ ...draft, status })}
-                    >
-                      <p>{status}</p>
-                    </div>
-                  ))
-                ) : (
-                  <div className="status__theme _active">
-                    <p>{draft.status}</p>
-                  </div>
-                )}
+                {isEdit
+                  ? STATUSES.map((status) => (
+                      <div
+                        key={status}
+                        className={`status__theme ${
+                          draft.status === status ? "_active" : ""
+                        }`}
+                        onClick={() => setDraft({ ...draft, status })}
+                      >
+                        <p>{status}</p>
+                      </div>
+                    ))
+                  : (
+                      <div className="status__theme _active">
+                        <p>{draft.status}</p>
+                      </div>
+                    )}
               </div>
             </div>
 
@@ -125,7 +162,7 @@ function PopBrowse() {
               <label className="subttl">Описание задачи</label>
               <form className="form-browse">
                 <textarea
-                  className="form-browse__area"
+                  className={`form-browse__area ${descriptionError ? "_error" : ""}`}
                   readOnly={!isEdit}
                   value={draft.description || ""}
                   onChange={(e) =>
