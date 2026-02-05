@@ -2,8 +2,11 @@ import styled from "styled-components";
 
 export const MainWrapper = styled.main`
   width: 100%;
-  background-color: #eaeef6;
+  background-color: ${({ theme }) => theme.colors.mainBg};
+  color: ${({ theme }) => theme.colors.text};
+  transition: background-color 0.3s ease, color 0.3s ease;
 `;
+
 export const Container = styled.div`
   max-width: 1260px;
   width: 100%;
@@ -18,7 +21,9 @@ export const Container = styled.div`
 export const MainBlock = styled.div`
   width: 100%;
   margin: 0 auto;
-  padding: 25px 0 49px;
+  color: ${({ theme }) => theme.colors.text};
+
+
 
   @media screen and (max-width: 1200px) {
     padding: 40px 0 64px;
@@ -40,20 +45,12 @@ export const MainColumn = styled.div`
   margin: 0;
   display: flex;
   flex-direction: column;
+  margin-right: 19px;
 
+ 
   @media screen and (max-width: 1200px) {
     width: 100%;
     margin: 0 auto;
     display: block;
-  }
-`;
-
-export const CardsWrapper = styled.div`
-  width: 100%;
-  display: block;
-  position: relative;
-
-  @media screen and (max-width: 1200px) {
-    overflow-y: auto;
   }
 `;

@@ -1,4 +1,6 @@
+import { useState } from "react";
 import Column from "../Column/Column";
+import { DragDropContext } from "@hello-pangea/dnd";
 import {
   MainWrapper,
   Container,
@@ -6,13 +8,6 @@ import {
   MainContent,
   MainColumn,
 } from "./main.styled";
-
-const CATEGORY_COLOR = {
-  "Web Design": "_orange",
-  Research: "_green",
-  Copywriting: "_purple",
-  Other: "_gray",
-};
 
 const STATUSES = [
   "Без статуса",
@@ -22,36 +17,78 @@ const STATUSES = [
   "Готово",
 ];
 
-const Main = ({ cards = [] }) => {
+const Main = ({
+  cards = [],
+  isLoading,
+  onDeleteCard,
+  onUpdateCard,
+  onOrderChange, 
+}) => {
+  const [isDragging, setIsDragging] = useState(false);
+
   const cardsByStatus = STATUSES.reduce((acc, status) => {
-    acc[status] = cards.filter((c) => c.status === status) || [];
+    acc[status] = cards.filter((c) => c.status === status);
     return acc;
   }, {});
 
-  const normalizeCards = (cardsArray) =>
-    cardsArray.map((c) => ({
-      id: c._id,
-      topic: c.topic || "Other",
-      theme: CATEGORY_COLOR[c.topic] || "_gray",
-      title: c.title || "Без названия",
-      date: c.date || null, 
-    }));
+  const handleDragEnd = (result) => {
+    setIsDragging(false);
+  
+    if (!result.destination || isLoading) return;
+  
+    const { draggableId, destination } = result;
+  
+    const dragged = cards.find((c) => c.id === draggableId);
+    if (!dragged) return;
+  
+    const newStatus = destination.droppableId;
+  
+    const updatedCards = [...cards];
+  
+    const fromIndex = updatedCards.findIndex((c) => c.id === draggableId);
+    const [removed] = updatedCards.splice(fromIndex, 1);
+  
+    removed.status = newStatus;
+  
+    const sameColumn = updatedCards.filter((c) => c.status === newStatus);
+    const other = updatedCards.filter((c) => c.status !== newStatus);
+  
+    sameColumn.splice(destination.index, 0, removed);
+  
+    const final = [...other, ...sameColumn];
+  
+    onOrderChange(final);
+  
+    onUpdateCard({
+      ...dragged,
+      status: newStatus,
+    });
+  };
   
 
   return (
     <MainWrapper>
       <Container>
         <MainBlock>
-          <MainContent>
-            {STATUSES.map((status) => (
-              <MainColumn key={status}>
-                <Column
-                  title={status}
-                  cards={normalizeCards(cardsByStatus[status])}
-                />
-              </MainColumn>
-            ))}
-          </MainContent>
+          <DragDropContext
+            onDragStart={() => setIsDragging(true)}
+            onDragEnd={handleDragEnd}
+          >
+            <MainContent>
+              {STATUSES.map((status) => (
+                <MainColumn key={status}>
+                  <Column
+                    title={status}
+                    cards={cardsByStatus[status]}
+                    isLoading={isLoading}
+                    isDragging={isDragging}
+                    onDeleteCard={onDeleteCard}
+                    onUpdateCard={onUpdateCard}
+                  />
+                </MainColumn>
+              ))}
+            </MainContent>
+          </DragDropContext>
         </MainBlock>
       </Container>
     </MainWrapper>

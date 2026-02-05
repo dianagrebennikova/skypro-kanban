@@ -5,7 +5,7 @@ export const LoginForm = styled.div`
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: rgba(234, 238, 246, 1);
+  background: ${({ $isDark }) => ($isDark ? "#151419" : "rgba(234, 238, 246, 1)")};
 `;
 
 export const LoginWrapper = styled.div`
@@ -15,8 +15,18 @@ export const LoginWrapper = styled.div`
   flex-direction: column;
   gap: 20px;
   padding: 50px 60px;
-  background: #ffffff;
+  background: ${({ $isDark }) => ($isDark ? "#20202C" : "#ffffff")};
   border-radius: 8px;
+  border: 1px solid 
+  ${({ $isDark }) =>
+    $isDark ? "rgba(148, 166, 190, 0.4)" : " rgba(0,0,0,0.1)"};
+
+@media screen and (max-width: 660px) {
+  background: ${({ $isDark }) => ($isDark ? "#151419" : "rgba(234, 238, 246, 1)")};
+  border: none;
+padding: 16px;
+
+}
 `;
 
 export const Title = styled.h1`
@@ -24,6 +34,7 @@ export const Title = styled.h1`
   font-weight: 700;
   font-size: 20px;
   text-align: center;
+  color: ${({ $isDark }) => ($isDark ? "#FFFFFF" : "#000000")};
 `;
 
 export const Input = styled.input`
@@ -36,11 +47,20 @@ export const Input = styled.input`
   margin-bottom: 10px;
 
   border: 1px solid
-    ${({ $error }) => ($error ? "red" : "rgba(148, 166, 190, 0.4)")};
+    ${({ $error, $isDark }) =>
+      $error ? "red" : $isDark ? "rgba(255,255,255,0.4)" : "rgba(148, 166, 190, 0.4)"};
+
+  background-color: ${({ $isDark }) => ($isDark ? "#20202C" : "#ffffff")};
+  color: ${({ $isDark }) => ($isDark ? "#FFFFFF" : "#000000")};
 
   &::placeholder {
-    color: rgba(148, 166, 190, 1);
+    color: ${({ $isDark }) => ($isDark ? "rgba(255,255,255,0.6)" : "rgba(148,166,190,1)")};
   }
+  @media screen and (max-width: 660px){
+    background: ${({ $isDark }) => ($isDark ? "#151419" : "rgba(234, 238, 246, 1)")};
+    min-height: 40px;
+  }
+
 `;
 
 export const Button = styled.button`
@@ -54,6 +74,10 @@ export const Button = styled.button`
   border: none;
   border-radius: 4px;
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
+
+  @media screen and (max-width: 660px){
+    min-height: 40px;
+  }
 `;
 
 export const ErrorText = styled.p`
@@ -66,11 +90,20 @@ export const RegisterLink = styled.div`
   text-align: center;
   font-family: Roboto;
   font-size: 14px;
-  color: rgba(148, 166, 190, 0.6);
+  color: rgba(148, 166, 190, 0.4);
 
   a {
-    color: rgba(148, 166, 190, 0.6);
+    color: rgba(148, 166, 190, 0.4);
     text-decoration: underline;
     cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
   }
+  @media screen and (max-width: 660px) {
+  display: flex;
+  flex-direction: column;
+    }
 `;
+

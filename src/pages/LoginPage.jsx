@@ -12,7 +12,7 @@ import {
   ErrorText,
 } from "./LoginPage.styled";
 
-const LoginPage = () => {
+const LoginPage = ({ isDark }) => {
   const navigate = useNavigate();
   const { login: authLogin } = useAuth();
 
@@ -25,7 +25,6 @@ const LoginPage = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     setError("");
     setLoginError(false);
     setPasswordError(false);
@@ -39,15 +38,12 @@ const LoginPage = () => {
 
     try {
       setLoading(true);
-
-      await authLogin({
-        login: login.trim(),
-        password: password.trim(),
-      });
-
+      await authLogin({ login: login.trim(), password: password.trim() });
       navigate("/", { replace: true });
-    } catch (err) {
-      setError(err);
+    } catch {
+      setError(
+        "Введенные вами данные не распознаны. Проверьте логин и пароль."
+      );
       setLoginError(true);
       setPasswordError(true);
     } finally {
@@ -56,9 +52,9 @@ const LoginPage = () => {
   };
 
   return (
-    <LoginForm>
-      <LoginWrapper>
-        <Title>Вход</Title>
+    <LoginForm $isDark={isDark}>
+      <LoginWrapper $isDark={isDark}>
+        <Title $isDark={isDark}>Вход</Title>
 
         <form onSubmit={handleLogin}>
           <Input
@@ -67,6 +63,7 @@ const LoginPage = () => {
             value={login}
             onChange={(e) => setLogin(e.target.value)}
             $error={loginError}
+            $isDark={isDark}
           />
 
           <Input
@@ -75,18 +72,18 @@ const LoginPage = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             $error={passwordError}
+            $isDark={isDark}
           />
 
-          <Button type="submit" disabled={loading}>
+          <Button type="submit" disabled={loading} $isDark={isDark}>
             {loading ? "Входим..." : "Войти"}
           </Button>
         </form>
 
         {error && <ErrorText>{error}</ErrorText>}
 
-        <RegisterLink>
-          Нужно зарегистрироваться?{" "}
-          <Link to="/register">Регистрируйтесь здесь</Link>
+        <RegisterLink $isDark={isDark}>
+          Нужно зарегистрироваться? <Link to="/register">Регистрируйтесь здесь</Link>
         </RegisterLink>
       </LoginWrapper>
     </LoginForm>

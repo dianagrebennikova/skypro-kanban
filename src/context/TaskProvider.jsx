@@ -39,9 +39,12 @@ export const TaskProvider = ({ children }) => {
       setError(null);
       setIsLoading(true);
 
-      // Получаем обновленный список задач с сервера
       const updatedTasks = await createTask(task);
-      setTasks(updatedTasks);
+      setTasks(
+        updatedTasks.slice().sort(
+          (a, b) => (a.order ?? 0) - (b.order ?? 0)
+        )
+      );
 
       return true; 
     } catch {
@@ -58,7 +61,6 @@ export const TaskProvider = ({ children }) => {
       setError(null);
       setIsLoading(true);
 
-      // Получаем обновленный список задач с сервера
       const updatedTasks = await updateTask(id, updatedTask);
       setTasks(updatedTasks);
 
@@ -77,7 +79,6 @@ export const TaskProvider = ({ children }) => {
       setError(null);
       setIsLoading(true);
 
-      // Получаем обновленный список задач с сервера
       const updatedTasks = await deleteTask(id);
       setTasks(updatedTasks);
 

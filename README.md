@@ -14,3 +14,23 @@ The React Compiler is not enabled on this template because of its impact on dev 
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+В рамках финального этапа приложение было оптимизировано, улучшено по UX и дополнено новыми возможностями.
+Отформатированы все файлы проекта
+Удалены лишние console.log, комментарии и неиспользуемые переменные
+Удалены неиспользуемые компоненты
+Упрощена структура компонентов
+Стили приведены к единому формату (без inline-стилей, через CSS)
+Устранены ошибки и предупреждения в консоли
+Добавлена обработка ошибок сервера во всех запросах (try/catch)
+Пользователь видит сообщения об ошибках при:
+добавлении задачи
+редактировании
+удалении
+Полностью проверена и реализована логика:
+добавление задач
+редактирование
+удаление
+обновление статуса
+корректное отображение при отсутствии задач
+выводится сообщение «Новых задач нет»

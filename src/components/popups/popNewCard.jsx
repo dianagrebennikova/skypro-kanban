@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Calendar from "../Calendar/Calendar";
 import { useTasks } from "../../context/TaskContext";
+import { toast } from "react-toastify";
 
 const CATEGORY_MAP = {
   "Web Design": "_orange",
@@ -13,60 +14,65 @@ function PopNewCard() {
   const navigate = useNavigate();
   const { addTask } = useTasks();
 
+  const [isDarkTheme] = useState(
+    () => localStorage.getItem("theme") === "dark"
+  );
+
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [topic, setTopic] = useState("Web Design");
+  const [description, setDescription] = useState(" ");
+  const [topic, setTopic] = useState("Research");
   const [date, setDate] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleClose = () => {
-    navigate(-1);
-  };
+  const handleClose = () => navigate(-1);
 
   const handleCreate = async (e) => {
     e.preventDefault();
 
-    if (!title.trim()) {
-      alert("Введите название задачи");
-      return;
-    }
-
     setIsLoading(true);
 
-    const success = await addTask({
-      title,
-      description,
-      topic,
-      status: "Без статуса",
-      date,
-    });
+    try {
+      const taskData = {
+        title: title.trim() || "Новая задача",
+        topic: topic || "Research",
+        status: "Без статуса",
+        description: description.trim() || " ",
+        date: date ? new Date(date).toISOString() : new Date().toISOString(),
+      };
 
-    setIsLoading(false);
+      const success = await addTask(taskData);
 
-    if (success) {
-      navigate(-1);
-    } else {
-      alert("Не удалось создать задачу");
+      if (success) {
+        toast.success("Задача успешно создана!");
+        navigate(-1);
+      } else {
+        toast.error("Не удалось создать задачу");
+      }
+    } catch (err) {
+      toast.error(err || "Ошибка сервера при создании задачи");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="pop-new-card" id="popNewCard">
-      <div className="pop-new-card__container">
-        <div className="pop-new-card__block">
+      <div className="pop-new-card__container" onClick={handleClose}>
+        <div
+          className={`pop-new-card__block ${isDarkTheme ? "dark-mode" : ""}`}
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="pop-new-card__content">
             <h3 className="pop-new-card__ttl">Создание задачи</h3>
 
-            <button className="pop-new-card__close" onClick={handleClose}>
-              &#10006;
-            </button>
-
             <div className="pop-new-card__wrap">
               <form className="pop-new-card__form form-new">
+
                 <div className="form-new__block">
                   <label htmlFor="formTitle" className="subttl">
                     Название задачи
                   </label>
+
                   <input
                     className="form-new__input"
                     type="text"
@@ -82,6 +88,7 @@ function PopNewCard() {
                   <label htmlFor="textArea" className="subttl">
                     Описание задачи
                   </label>
+
                   <textarea
                     className="form-new__area"
                     id="textArea"
@@ -96,7 +103,7 @@ function PopNewCard() {
                 <Calendar
                   date={date}
                   variant="full"
-                  onChange={(newDate) => setDate(newDate)}
+                  onChange={setDate}
                 />
               </div>
             </div>
@@ -113,7 +120,7 @@ function PopNewCard() {
                     }`}
                     onClick={() => setTopic(cat)}
                   >
-                    <p className={CATEGORY_MAP[cat]}>{cat}</p>
+                    <p style={{ margin: 0 }}>{cat}</p>
                   </div>
                 ))}
               </div>

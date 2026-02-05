@@ -13,8 +13,9 @@ import {
   CalendarCells,
   CalendarCell,
   CalendarPeriod,
-  CalendarPeriodText,
   CalendarText,
+  CalendarPeriodText,
+ 
 } from "./calendar.styled";
 
 const DAYS = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"];
@@ -34,14 +35,14 @@ function parseDate(dateStr) {
   return isNaN(d) ? null : d;
 }
 
-export default function Calendar({ date, variant = "full", onChange })  {
+export default function Calendar({ date, variant = "full", onChange }) {
   const initialDate = parseDate(date) || null;
   const [currentDate, setCurrentDate] = useState(initialDate || new Date());
   const [selectedDate, setSelectedDate] = useState(initialDate);
 
   useEffect(() => {
     const parsed = parseDate(date);
-  
+
     if (!parsed) {
       setTimeout(() => {
         setSelectedDate(null);
@@ -55,7 +56,7 @@ export default function Calendar({ date, variant = "full", onChange })  {
       setCurrentDate(parsed);
     }, 0);
   }, [date]);
-  
+
   if (variant === "compact") {
     let formattedDate = "Без даты";
 
@@ -138,28 +139,19 @@ export default function Calendar({ date, variant = "full", onChange })  {
   }
 
   const changeMonth = (direction) => {
-    setCurrentDate(
-      new Date(year, month + (direction === "next" ? 1 : -1), 1)
-    );
+    setCurrentDate(new Date(year, month + (direction === "next" ? 1 : -1), 1));
   };
   const handleSelectDay = (day) => {
     const newDate = new Date(year, month, day);
-  
+
     setSelectedDate(newDate);
     setCurrentDate(newDate);
-  
+
     if (onChange) {
       onChange(newDate.toISOString());
     }
   };
-  
-  
 
-  const displayText = selectedDate
-    ? `Срок исполнения: ${String(selectedDate.getDate()).padStart(2, "0")}.${String(
-        selectedDate.getMonth() + 1
-      ).padStart(2, "0")}.${selectedDate.getFullYear()}`
-    : "Выберите срок исполнения";
 
   return (
     <CalendarWrapper>
@@ -192,27 +184,48 @@ export default function Calendar({ date, variant = "full", onChange })  {
           </CalendarDaysNames>
 
           <CalendarCells>
-            {cells.map((cell, index) => (
-              <CalendarCell
-                key={index}
-                className={`
-                  ${cell.otherMonth ? "_other-month" : ""}
-                  ${cell.weekend ? "_weekend" : ""}
-                  ${cell.current ? "_current" : ""}
-                  ${cell.active ? "_active-day" : ""}
-                `}
-                onClick={() =>
-                  !cell.otherMonth && cell.day && handleSelectDay(cell.day)
-                }
-              >
-                {cell.day}
-              </CalendarCell>
-            ))}
+            {cells.map((cell, index) => {
+              const isToday =
+                !cell.otherMonth &&
+                cell.day === new Date().getDate() &&
+                month === new Date().getMonth() &&
+                year === new Date().getFullYear();
+
+              return (
+                <CalendarCell
+                  key={index}
+                  $today={isToday}
+                  className={`
+    ${cell.otherMonth ? "_other-month" : ""}
+    ${cell.weekend ? "_weekend" : ""}
+    ${cell.active ? "_active-day" : ""}
+  `}
+                  onClick={() =>
+                    !cell.otherMonth && cell.day && handleSelectDay(cell.day)
+                  }
+                >
+                  {cell.day}
+                </CalendarCell>
+              );
+            })}
           </CalendarCells>
         </CalendarContent>
 
         <CalendarPeriod>
-          <CalendarPeriodText>{displayText}</CalendarPeriodText>
+          <CalendarPeriodText>
+            {selectedDate ? (
+      <>
+        Срок исполнения:{" "}
+        <span>
+          {String(selectedDate.getDate()).padStart(2, "0")}.
+          {String(selectedDate.getMonth() + 1).padStart(2, "0")}.
+          {selectedDate.getFullYear()}
+        </span>
+      </>
+    ) : (
+      "Выберите срок исполнения"
+    )}
+    </CalendarPeriodText>
         </CalendarPeriod>
       </CalendarBlock>
     </CalendarWrapper>
